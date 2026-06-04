@@ -5,7 +5,6 @@ import java.time.Instant;
 import java.util.UUID;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Index;
 
 @Entity
 @Table(
