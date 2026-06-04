@@ -12,20 +12,19 @@ import lombok.*;
 @Builder
 public class BookAuthor {
 
-    @EmbeddedId
-    private BookAuthorId id;
+  @EmbeddedId private BookAuthorId id;
 
-    @Column(name = "role", length = 50)
-    @Builder.Default
-    private String role = "Author";
+  @Column(name = "role", length = 50)
+  @Builder.Default
+  private String role = "Author";
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("bookId")
-    @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "fk_book_author_book"))
-    private Book book;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @MapsId("bookId")
+  @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "fk_book_author_book"))
+  private Book book;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("authorId")
-    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_book_author_author"))
-    private Author author;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @MapsId("authorId")
+  @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_book_author_author"))
+  private Author author;
 }

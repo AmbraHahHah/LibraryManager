@@ -1,7 +1,7 @@
 package com.library.prog.model;
 
 public enum FormatEnum {
-    PAPERBACK,
-    HARDCOVER,
-    EBOOK
+  PAPERBACK,
+  HARDCOVER,
+  EBOOK
 }
