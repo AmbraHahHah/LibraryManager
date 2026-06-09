@@ -24,7 +24,7 @@ public class Client {
   @Column(name = "id", updatable = false, nullable = false)
   private UUID id;
 
-  @Column(name = "name", nullable = false, length = 200)
+  @Column(name = "last_name", nullable = false, length = 200)
   private String lastName;
 
   @Column(name = "first_name", nullable = false, length = 200)

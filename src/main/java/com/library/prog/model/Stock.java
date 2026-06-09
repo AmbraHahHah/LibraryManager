@@ -20,11 +20,11 @@ public class Stock {
   @Column(name = "id", updatable = false, nullable = false)
   private UUID id;
 
-  @Column(name = "quantity_disposable", nullable = false)
+  @Column(name = "available_quantity", nullable = false)
   @Builder.Default
   private Integer availableQuantity = 0;
 
-  @Column(name = "quantity_reservee", nullable = false)
+  @Column(name = "reserved_quantity", nullable = false)
   @Builder.Default
   private Integer reservedQuantity = 0;
 
@@ -38,10 +38,10 @@ public class Stock {
 
   @OneToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(
-      name = "exemplar_id",
+      name = "copy_id",
       nullable = false,
       unique = true,
-      foreignKey = @ForeignKey(name = "fk_stock_exemplaire"))
+      foreignKey = @ForeignKey(name = "fk_stock_copy"))
   private Copy copy;
 
   public int getAvailableStock() {
