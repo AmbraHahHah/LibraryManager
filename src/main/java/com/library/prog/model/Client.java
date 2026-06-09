@@ -56,7 +56,7 @@ public class Client {
   @Column(name = "registration_date", nullable = false, updatable = false)
   private Instant registrationDate;
 
-  @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
   @Builder.Default
   private List<Order> orders = new ArrayList<>();
 
