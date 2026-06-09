@@ -6,8 +6,4 @@ import lombok.Builder;
 
 @Builder
 public record BookResponse(
-    UUID id,
-    String title,
-    String summary,
-    String language,
-    Instant createdAt) {}
+    UUID id, String title, String summary, String language, Instant createdAt) {}

@@ -32,8 +32,7 @@ public class BookService {
         Book.builder()
             .title(request.title())
             .summary(request.summary())
-            .language(
-                request.language() != null ? request.language() : "English")
+            .language(request.language() != null ? request.language() : "English")
             .build();
     return toResponse(bookRepository.save(book));
   }
@@ -45,8 +44,7 @@ public class BookService {
             .orElseThrow(() -> new EntityNotFoundException("Book not found: " + id));
     book.setTitle(request.title());
     book.setSummary(request.summary());
-    book.setLanguage(
-        request.language() != null ? request.language() : "English");
+    book.setLanguage(request.language() != null ? request.language() : "English");
     return toResponse(bookRepository.save(book));
   }
 

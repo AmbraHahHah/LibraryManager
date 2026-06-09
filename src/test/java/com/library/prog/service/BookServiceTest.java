@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.library.prog.dto.request.BookRequest;
-import com.library.prog.dto.response.BookResponse;
 import com.library.prog.model.Book;
 import com.library.prog.repository.BookRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -85,7 +84,12 @@ class BookServiceTest {
   @Test
   void update_modifies_existing_book() {
     var existing = buildBook("Old Title");
-    var request = BookRequest.builder().title("Updated Title").summary("New summary").language("French").build();
+    var request =
+        BookRequest.builder()
+            .title("Updated Title")
+            .summary("New summary")
+            .language("French")
+            .build();
     when(bookRepository.findById(existing.getId())).thenReturn(Optional.of(existing));
     when(bookRepository.save(any(Book.class))).thenAnswer(invocation -> invocation.getArgument(0));
 

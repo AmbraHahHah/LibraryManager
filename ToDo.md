@@ -54,24 +54,19 @@ Chaque entité nécessite : Repository → DTOs (Request/Response) → Service �
 
 ## 7. Tests
 
-- [ ] Tests unitaires (JUnit + Mockito) pour `BookService`
+- [X] Tests unitaires (JUnit + Mockito) pour `BookService`
 - [ ] Tests d'intégration pour `BookController` (Testcontainers)
 - [ ] Tests pour chaque nouveau service
 
-## 8. Infrastructure
 
-- [ ] Supprimer le warning Flyway : PostgreSQL 18.4 > version supportée (15)
-  - Mettre à jour `flyway-core` vers une version récente
-- [ ] Remplacer `spring.jpa.hibernate.ddl-auto=update` par des migrations Flyway pour les tables domaine
-- [ ] Ajouter un fichier `application-prod.properties` pour la prod (ddl-auto=validate)
 
-## 9. Sécurité
+## 8. Sécurité
 
 - [ ] Ajouter un système d'authentification (Spring Security / JWT)
 - [ ] Protéger les endpoints sensibles (création, modification, suppression)
 - [ ] Vérifier les accès : un client ne voit que ses propres commandes
 
-## 10. Améliorations
+## 9. Améliorations
 
 - [ ] Ajouter un "vrai" health endpoint (DB + services externes)
 - [ ] Supprimer les entités `Dummy` / `DummyUuid` (utiles uniquement en dev POJA)

@@ -6,6 +6,4 @@ import lombok.Builder;
 
 @Builder
 public record BookRequest(
-    @NotBlank @Size(max = 500) String title,
-    String summary,
-    @Size(max = 50) String language) {}
+    @NotBlank @Size(max = 500) String title, String summary, @Size(max = 50) String language) {}

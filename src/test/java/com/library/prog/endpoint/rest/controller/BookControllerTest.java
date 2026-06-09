@@ -21,7 +21,12 @@ class BookControllerTest extends FacadeIT {
 
   @Test
   void create_and_find_book() {
-    var request = BookRequest.builder().title("Le Petit Prince").summary("Un grand classique").language("French").build();
+    var request =
+        BookRequest.builder()
+            .title("Le Petit Prince")
+            .summary("Un grand classique")
+            .language("French")
+            .build();
 
     var created = rest.postForEntity("/books", request, BookResponse.class);
 
@@ -49,8 +54,11 @@ class BookControllerTest extends FacadeIT {
 
   @Test
   void update_book() {
-    var created = rest.postForEntity("/books", BookRequest.builder().title("Original").build(), BookResponse.class);
-    var updateRequest = BookRequest.builder().title("Updated").summary("New summary").language("English").build();
+    var created =
+        rest.postForEntity(
+            "/books", BookRequest.builder().title("Original").build(), BookResponse.class);
+    var updateRequest =
+        BookRequest.builder().title("Updated").summary("New summary").language("English").build();
 
     rest.put("/books/" + created.getBody().id(), updateRequest);
     var updated = rest.getForEntity("/books/" + created.getBody().id(), BookResponse.class);
@@ -61,7 +69,9 @@ class BookControllerTest extends FacadeIT {
 
   @Test
   void delete_book() {
-    var created = rest.postForEntity("/books", BookRequest.builder().title("To Delete").build(), BookResponse.class);
+    var created =
+        rest.postForEntity(
+            "/books", BookRequest.builder().title("To Delete").build(), BookResponse.class);
     var id = created.getBody().id();
 
     rest.delete("/books/" + id);
