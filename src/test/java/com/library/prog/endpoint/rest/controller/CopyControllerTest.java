@@ -79,7 +79,11 @@ class CopyControllerTest extends FacadeIT {
   void list_all_copies() {
     rest.postForEntity(
         "/copies",
-        CopyRequest.builder().isbn("1111111111").format(FormatEnum.PAPERBACK).bookId(bookId).build(),
+        CopyRequest.builder()
+            .isbn("1111111111")
+            .format(FormatEnum.PAPERBACK)
+            .bookId(bookId)
+            .build(),
         CopyResponse.class);
     rest.postForEntity(
         "/copies",
@@ -144,11 +148,7 @@ class CopyControllerTest extends FacadeIT {
   @Test
   void return_400_when_isbn_is_blank() {
     var request =
-        CopyRequest.builder()
-            .isbn("")
-            .format(FormatEnum.PAPERBACK)
-            .bookId(bookId)
-            .build();
+        CopyRequest.builder().isbn("").format(FormatEnum.PAPERBACK).bookId(bookId).build();
 
     var response = rest.postForEntity("/copies", request, String.class);
 
@@ -166,11 +166,7 @@ class CopyControllerTest extends FacadeIT {
 
   @Test
   void return_400_when_bookId_is_null() {
-    var request =
-        CopyRequest.builder()
-            .isbn("9782070612758")
-            .format(FormatEnum.PAPERBACK)
-            .build();
+    var request = CopyRequest.builder().isbn("9782070612758").format(FormatEnum.PAPERBACK).build();
 
     var response = rest.postForEntity("/copies", request, String.class);
 
