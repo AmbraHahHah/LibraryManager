@@ -4,12 +4,12 @@
 
 Chaque entité nécessite : Repository → DTOs (Request/Response) → Service → Controller
 
-- [X by Vals43 ] **Book** — CRUD complet
+- [X] **Book** — CRUD complet
 - [ ] **Author** — CRUD complet
 - [ ] **Category** — CRUD complet (gestion hiérarchique parent/enfants)
 - [ ] **Client** — CRUD complet
 - [X] **Editor** — CRUD complet
-- [ ] **Copy** — CRUD complet (lié à Book + Editor)
+- [X] **Copy** — CRUD complet (lié à Book + Editor)
 - [ ] **Order** — CRUD complet (lié à Client + OrderLine)
 - [ ] **OrderLine** — CRUD (lié à Order + Copy)
 - [ ] **Review** — CRUD (lié à Book + Client)
