@@ -160,8 +160,7 @@ class CopyServiceTest {
             .build();
     var captor = ArgumentCaptor.forClass(Copy.class);
     when(bookRepository.findById(book.getId())).thenReturn(Optional.of(book));
-    when(copyRepository.save(captor.capture()))
-        .thenAnswer(invocation -> invocation.getArgument(0));
+    when(copyRepository.save(captor.capture())).thenAnswer(invocation -> invocation.getArgument(0));
 
     copyService.create(request);
 
@@ -212,11 +211,7 @@ class CopyServiceTest {
     var copy = buildCopy("ISBN", buildBook(), null);
     var bookId = UUID.randomUUID();
     var request =
-        CopyRequest.builder()
-            .isbn("ISBN")
-            .format(FormatEnum.PAPERBACK)
-            .bookId(bookId)
-            .build();
+        CopyRequest.builder().isbn("ISBN").format(FormatEnum.PAPERBACK).bookId(bookId).build();
     when(copyRepository.findById(copy.getId())).thenReturn(Optional.of(copy));
     when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
 
