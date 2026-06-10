@@ -14,56 +14,56 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EditorService {
 
-	private final EditorRepository editorRepository;
+  private final EditorRepository editorRepository;
 
-	public List<EditorResponse> findAll() {
-		return editorRepository.findAll().stream().map(this::toResponse).toList();
-	}
+  public List<EditorResponse> findAll() {
+    return editorRepository.findAll().stream().map(this::toResponse).toList();
+  }
 
-	public EditorResponse findById(UUID id) {
-		return editorRepository
-			.findById(id)
-			.map(this::toResponse)
-			.orElseThrow(() -> new EntityNotFoundException("Editor not found: " + id));
-	}
+  public EditorResponse findById(UUID id) {
+    return editorRepository
+        .findById(id)
+        .map(this::toResponse)
+        .orElseThrow(() -> new EntityNotFoundException("Editor not found: " + id));
+  }
 
-	public EditorResponse create(EditorRequest request) {
-		var editor = Editor
-			.builder()
-			.name(request.name())
-			.address(request.address())
-			.email(request.email())
-			.country(request.country())
-			.build();
-		return toResponse(editorRepository.save(editor));
-	}
+  public EditorResponse create(EditorRequest request) {
+    var editor =
+        Editor.builder()
+            .name(request.name())
+            .address(request.address())
+            .email(request.email())
+            .country(request.country())
+            .build();
+    return toResponse(editorRepository.save(editor));
+  }
 
-	public EditorResponse update(UUID id, EditorRequest request) {
-		var editor = editorRepository
-			.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException("Editor not found: " + id));
-		editor.setName(request.name());
-		editor.setAddress(request.address());
-		editor.setEmail(request.email());
-		editor.setCountry(request.country());
-		return toResponse(editorRepository.save(editor));
-	}
+  public EditorResponse update(UUID id, EditorRequest request) {
+    var editor =
+        editorRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Editor not found: " + id));
+    editor.setName(request.name());
+    editor.setAddress(request.address());
+    editor.setEmail(request.email());
+    editor.setCountry(request.country());
+    return toResponse(editorRepository.save(editor));
+  }
 
-	public void delete(UUID id) {
-		if (!editorRepository.existsById(id)) {
-			throw new EntityNotFoundException("Editor not found: " + id);
-		}
-		editorRepository.deleteById(id);
-	}
+  public void delete(UUID id) {
+    if (!editorRepository.existsById(id)) {
+      throw new EntityNotFoundException("Editor not found: " + id);
+    }
+    editorRepository.deleteById(id);
+  }
 
-	private EditorResponse toResponse(Editor editor) {
-		return EditorResponse
-			.builder()
-			.id(editor.getId())
-			.name(editor.getName())
-			.address(editor.getAddress())
-			.email(editor.getEmail())
-			.country(editor.getCountry())
-			.build();
-	}
+  private EditorResponse toResponse(Editor editor) {
+    return EditorResponse.builder()
+        .id(editor.getId())
+        .name(editor.getName())
+        .address(editor.getAddress())
+        .email(editor.getEmail())
+        .country(editor.getCountry())
+        .build();
+  }
 }
