@@ -59,9 +59,7 @@ class EditorControllerTest extends FacadeIT {
   void update_editor() {
     var created =
         rest.postForEntity(
-            "/editors",
-            EditorRequest.builder().name("Original").build(),
-            EditorResponse.class);
+            "/editors", EditorRequest.builder().name("Original").build(), EditorResponse.class);
     var updateRequest =
         EditorRequest.builder()
             .name("Updated")
@@ -83,9 +81,7 @@ class EditorControllerTest extends FacadeIT {
   void delete_editor() {
     var created =
         rest.postForEntity(
-            "/editors",
-            EditorRequest.builder().name("To Delete").build(),
-            EditorResponse.class);
+            "/editors", EditorRequest.builder().name("To Delete").build(), EditorResponse.class);
     var id = created.getBody().id();
 
     rest.delete("/editors/" + id);

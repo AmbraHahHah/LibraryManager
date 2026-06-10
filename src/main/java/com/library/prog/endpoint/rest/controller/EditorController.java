@@ -25,32 +25,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class EditorController {
 
-	private final EditorService editorService;
+  private final EditorService editorService;
 
-	@GetMapping
-	public List<EditorResponse> findAll() {
-		return editorService.findAll();
-	}
+  @GetMapping
+  public List<EditorResponse> findAll() {
+    return editorService.findAll();
+  }
 
-	@GetMapping("/{id}")
-	public EditorResponse findById(@PathVariable UUID id) {
-		return editorService.findById(id);
-	}
+  @GetMapping("/{id}")
+  public EditorResponse findById(@PathVariable UUID id) {
+    return editorService.findById(id);
+  }
 
-	@PostMapping
-	public ResponseEntity<EditorResponse> create(@Valid @RequestBody EditorRequest request) {
-		var response = editorService.create(request);
-		return ResponseEntity.created(URI.create("/editors/" + response.id())).body(response);
-	}
+  @PostMapping
+  public ResponseEntity<EditorResponse> create(@Valid @RequestBody EditorRequest request) {
+    var response = editorService.create(request);
+    return ResponseEntity.created(URI.create("/editors/" + response.id())).body(response);
+  }
 
-	@PutMapping("/{id}")
-	public EditorResponse update(@PathVariable UUID id, @Valid @RequestBody EditorRequest request) {
-		return editorService.update(id, request);
-	}
+  @PutMapping("/{id}")
+  public EditorResponse update(@PathVariable UUID id, @Valid @RequestBody EditorRequest request) {
+    return editorService.update(id, request);
+  }
 
-	@DeleteMapping("/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable UUID id) {
-		editorService.delete(id);
-	}
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void delete(@PathVariable UUID id) {
+    editorService.delete(id);
+  }
 }
