@@ -1,1 +1,11 @@
 rootProject.name = 'library-e3714c9d'
+
+// Restore dependencies removed by Poja auto-commit (runs before build.gradle is evaluated)
+def restoreScript = file('.shell/restore-poja-deps.sh')
+if (restoreScript.exists()) {
+    def proc = ['bash', restoreScript.absolutePath].execute()
+    proc.waitFor()
+    if (proc.exitValue() != 0) {
+        throw new GradleException("Failed to restore Poja deps: ${proc.err.text}")
+    }
+}
