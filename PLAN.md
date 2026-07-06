@@ -7,9 +7,9 @@
 
 ## 2. Argent gagné par genre
 
-- [ ] Créer `RevenueService.getRevenueByGenre()`
-- [ ] `GET /revenue/by-genre` → `[{genre: "Romance", revenue: 730000}]`
-- [ ] Chemin : `OrderLine.unitPrice × quantity → Copy → Book → BookCategory → Category`
+- [X] Créer `RevenueService.getRevenueByGenre()`
+- [X] `GET /revenue/by-genre` → `[{genre: "Romance", revenue: 730000}]`
+- [X] Chemin : `OrderLine.unitPrice × quantity → Copy → Book → BookCategory → Category`
 
 ## 3. Validation de vente avec le stock
 
