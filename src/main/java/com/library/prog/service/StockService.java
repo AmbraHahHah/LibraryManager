@@ -160,31 +160,32 @@ public class StockService {
 
     var editionMap =
         copies.stream()
-            .collect(Collectors.groupingBy(
-                c -> c.getFormat().name(),
-                Collectors.collectingAndThen(Collectors.toList(), editionCopies -> {
-                  long copyCount = editionCopies.size();
-                  int availableStock = 0;
-                  int reservedQty = 0;
-                  for (var c : editionCopies) {
-                    var optStock = stockRepository.findByCopyId(c.getId());
-                    if (optStock.isPresent()) {
-                      var s = optStock.get();
-                      availableStock += s.getAvailableStock();
-                      reservedQty += s.getReservedQuantity();
-                    }
-                  }
-                  return EditionStock.builder()
-                      .format(editionCopies.getFirst().getFormat().name())
-                      .copyCount(copyCount)
-                      .availableStock(availableStock)
-                      .reservedQuantity(reservedQty)
-                      .build();
-                })));
+            .collect(
+                Collectors.groupingBy(
+                    c -> c.getFormat().name(),
+                    Collectors.collectingAndThen(
+                        Collectors.toList(),
+                        editionCopies -> {
+                          long copyCount = editionCopies.size();
+                          int availableStock = 0;
+                          int reservedQty = 0;
+                          for (var c : editionCopies) {
+                            var optStock = stockRepository.findByCopyId(c.getId());
+                            if (optStock.isPresent()) {
+                              var s = optStock.get();
+                              availableStock += s.getAvailableStock();
+                              reservedQty += s.getReservedQuantity();
+                            }
+                          }
+                          return EditionStock.builder()
+                              .format(editionCopies.getFirst().getFormat().name())
+                              .copyCount(copyCount)
+                              .availableStock(availableStock)
+                              .reservedQuantity(reservedQty)
+                              .build();
+                        })));
 
-    return StockByEditionResponse.builder()
-        .editions(List.copyOf(editionMap.values()))
-        .build();
+    return StockByEditionResponse.builder().editions(List.copyOf(editionMap.values())).build();
   }
 
   @Transactional
