@@ -1,0 +1,39 @@
+openapi: 3.0.3
+info:
+  title: LibraryManager API
+  version: 1.0.0
+  description: API de gestion de librairie
+
+paths:
+  /revenue/by-genre:
+    get:
+      summary: Revenu total par genre
+      description: Agrège le chiffre d'affaires par catégorie de livre, basé sur les commandes confirmées (exclut PENDING, CANCELLED, REFUNDED)
+      tags:
+        - Revenue
+      operationId: getRevenueByGenre
+      responses:
+        "200":
+          description: Liste des revenus par genre, triée par revenu décroissant
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RevenueByGenreResponse"
+
+components:
+  schemas:
+    RevenueByGenreResponse:
+      type: object
+      properties:
+        genre:
+          type: string
+          description: Nom de la catégorie
+        revenue:
+          type: number
+          format: decimal
+          description: Chiffre d'affaires total pour ce genre
+      required:
+        - genre
+        - revenue
