@@ -1,1 +1,44 @@
 rootProject.name = 'library-e3714c9d'
+
+// Poja removes spring-boot-starter-validation and test config from build.gradle
+// on every auto-commit. Poja does NOT touch settings.gradle, so we patch the file
+// directly here (runs before Gradle evaluates build.gradle).
+def buildFile = file('build.gradle')
+def content = buildFile.text
+def patched = false
+
+if (!content.contains('spring-boot-starter-validation')) {
+    content = content.replace(
+        "implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.2.2'",
+        "implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.2.2'\n" +
+        "    implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.2'"
+    )
+    patched = true
+}
+
+if (!content.contains('excludeTags')) {
+    content = content.replace(
+        '    useJUnitPlatform()',
+        '''    useJUnitPlatform {
+        excludeTags 'integration'
+    }'''
+    )
+    patched = true
+}
+
+if (!content.contains('task integrationTest')) {
+    content += '''
+
+task integrationTest(type: Test) {
+    useJUnitPlatform {
+        includeTags 'integration'
+    }
+    shouldRunAfter test
+}
+'''
+    patched = true
+}
+
+if (patched) {
+    buildFile.text = content
+}

@@ -20,6 +20,7 @@ jacoco {
 
 
 repositories {
+
     mavenCentral()
 }
 
@@ -34,6 +35,7 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
+
 
 
 
@@ -159,6 +161,6 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers-junit-jupiter:2.0.2'
     testImplementation 'org.junit-pioneer:junit-pioneer:2.2.0'
 
-    implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+
 
 }
