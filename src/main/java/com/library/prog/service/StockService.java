@@ -2,6 +2,9 @@ package com.library.prog.service;
 
 import com.library.prog.dto.request.StockAdjustRequest;
 import com.library.prog.dto.request.StockRequest;
+import com.library.prog.dto.response.BookStockResponse;
+import com.library.prog.dto.response.StockByEditionResponse;
+import com.library.prog.dto.response.StockByEditionResponse.EditionStock;
 import com.library.prog.dto.response.StockResponse;
 import com.library.prog.model.Stock;
 import com.library.prog.model.StockMovement;
@@ -12,6 +15,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -125,6 +129,62 @@ public class StockService {
     stockMovementRepository.save(movement);
 
     return toResponse(stock);
+  }
+
+  public BookStockResponse getBookStock(UUID bookId) {
+    var copies = copyRepository.findByBookId(bookId);
+    var stocks = copies.stream().map(c -> stockRepository.findByCopyId(c.getId()));
+
+    long totalCopies = copies.size();
+    int totalAvailableStock = 0;
+    int totalReservedQuantity = 0;
+
+    for (var optStock : stocks.toList()) {
+      if (optStock.isPresent()) {
+        var s = optStock.get();
+        totalAvailableStock += s.getAvailableStock();
+        totalReservedQuantity += s.getReservedQuantity();
+      }
+    }
+
+    return BookStockResponse.builder()
+        .totalCopies(totalCopies)
+        .totalAvailableStock(totalAvailableStock)
+        .totalReservedQuantity(totalReservedQuantity)
+        .outOfStock(totalAvailableStock <= 0)
+        .build();
+  }
+
+  public StockByEditionResponse getStockByEdition(UUID bookId) {
+    var copies = copyRepository.findByBookId(bookId);
+
+    var editionMap =
+        copies.stream()
+            .collect(Collectors.groupingBy(
+                c -> c.getFormat().name(),
+                Collectors.collectingAndThen(Collectors.toList(), editionCopies -> {
+                  long copyCount = editionCopies.size();
+                  int availableStock = 0;
+                  int reservedQty = 0;
+                  for (var c : editionCopies) {
+                    var optStock = stockRepository.findByCopyId(c.getId());
+                    if (optStock.isPresent()) {
+                      var s = optStock.get();
+                      availableStock += s.getAvailableStock();
+                      reservedQty += s.getReservedQuantity();
+                    }
+                  }
+                  return EditionStock.builder()
+                      .format(editionCopies.getFirst().getFormat().name())
+                      .copyCount(copyCount)
+                      .availableStock(availableStock)
+                      .reservedQuantity(reservedQty)
+                      .build();
+                })));
+
+    return StockByEditionResponse.builder()
+        .editions(List.copyOf(editionMap.values()))
+        .build();
   }
 
   @Transactional

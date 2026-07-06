@@ -2,7 +2,10 @@ package com.library.prog.endpoint.rest.controller;
 
 import com.library.prog.dto.request.BookRequest;
 import com.library.prog.dto.response.BookResponse;
+import com.library.prog.dto.response.BookStockResponse;
+import com.library.prog.dto.response.StockByEditionResponse;
 import com.library.prog.service.BookService;
+import com.library.prog.service.StockService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookController {
 
   private final BookService bookService;
+  private final StockService stockService;
 
   @GetMapping
   public List<BookResponse> findAll() {
@@ -35,6 +39,16 @@ public class BookController {
   @GetMapping("/{id}")
   public BookResponse findById(@PathVariable UUID id) {
     return bookService.findById(id);
+  }
+
+  @GetMapping("/{bookId}/stock")
+  public BookStockResponse getBookStock(@PathVariable UUID bookId) {
+    return stockService.getBookStock(bookId);
+  }
+
+  @GetMapping("/{bookId}/stock-by-edition")
+  public StockByEditionResponse getStockByEdition(@PathVariable UUID bookId) {
+    return stockService.getStockByEdition(bookId);
   }
 
   @PostMapping
