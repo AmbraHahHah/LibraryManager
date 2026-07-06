@@ -2,8 +2,8 @@
 
 ## 1. Stock par Livre et par Édition
 
-- [ ] `GET /books/{bookId}/stock` — agrège les stocks de toutes les copies d'un livre
-- [ ] `GET /books/{bookId}/stock-by-edition` — stock groupé par format (PAPERBACK, HARDCOVER, etc.)
+- [X] `GET /books/{bookId}/stock` — agrège les stocks de toutes les copies d'un livre
+- [X] `GET /books/{bookId}/stock-by-edition` — stock groupé par format (PAPERBACK, HARDCOVER, etc.)
 
 ## 2. Argent gagné par genre
 
