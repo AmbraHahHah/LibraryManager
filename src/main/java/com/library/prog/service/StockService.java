@@ -3,7 +3,6 @@ package com.library.prog.service;
 import com.library.prog.dto.request.StockAdjustRequest;
 import com.library.prog.dto.request.StockRequest;
 import com.library.prog.dto.response.StockResponse;
-import com.library.prog.model.MovementTypeEnum;
 import com.library.prog.model.Stock;
 import com.library.prog.model.StockMovement;
 import com.library.prog.repository.CopyRepository;
@@ -135,8 +134,8 @@ public class StockService {
             .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Stock not found: " + id));
 
-    var movements = stockMovementRepository.findByCopyIdOrderByMovementDateDesc(
-        stock.getCopy().getId());
+    var movements =
+        stockMovementRepository.findByCopyIdOrderByMovementDateDesc(stock.getCopy().getId());
     if (!movements.isEmpty()) {
       throw new IllegalStateException("Cannot delete stock with existing movements");
     }

@@ -33,17 +33,13 @@ public class StockMovementService {
   }
 
   public List<StockMovementResponse> findByCopyId(UUID copyId) {
-    return stockMovementRepository
-        .findByCopyIdOrderByMovementDateDesc(copyId)
-        .stream()
+    return stockMovementRepository.findByCopyIdOrderByMovementDateDesc(copyId).stream()
         .map(this::toResponse)
         .toList();
   }
 
   public List<StockMovementResponse> findByOrderId(UUID orderId) {
-    return stockMovementRepository
-        .findByOrderIdOrderByMovementDateDesc(orderId)
-        .stream()
+    return stockMovementRepository.findByOrderIdOrderByMovementDateDesc(orderId).stream()
         .map(this::toResponse)
         .toList();
   }
