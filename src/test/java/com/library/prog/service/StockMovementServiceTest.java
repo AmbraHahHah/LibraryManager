@@ -81,8 +81,7 @@ class StockMovementServiceTest {
   @Test
   void findByCopyId_returns_empty_when_no_movements() {
     var copyId = UUID.randomUUID();
-    when(stockMovementRepository.findByCopyIdOrderByMovementDateDesc(copyId))
-        .thenReturn(List.of());
+    when(stockMovementRepository.findByCopyIdOrderByMovementDateDesc(copyId)).thenReturn(List.of());
 
     var result = stockMovementService.findByCopyId(copyId);
 
@@ -117,12 +116,13 @@ class StockMovementServiceTest {
   @Test
   void create_creates_movement_without_order() {
     var copy = buildCopy();
-    var request = StockMovementRequest.builder()
-        .quantity(5)
-        .movementType(MovementTypeEnum.RESTOCK)
-        .reason("Restock")
-        .copyId(copy.getId())
-        .build();
+    var request =
+        StockMovementRequest.builder()
+            .quantity(5)
+            .movementType(MovementTypeEnum.RESTOCK)
+            .reason("Restock")
+            .copyId(copy.getId())
+            .build();
     when(copyRepository.findById(copy.getId())).thenReturn(Optional.of(copy));
     when(stockMovementRepository.save(any(StockMovement.class)))
         .thenAnswer(invocation -> invocation.getArgument(0));
@@ -140,13 +140,14 @@ class StockMovementServiceTest {
   void create_creates_movement_with_order() {
     var copy = buildCopy();
     var order = buildOrder();
-    var request = StockMovementRequest.builder()
-        .quantity(3)
-        .movementType(MovementTypeEnum.SALE)
-        .reason("Sale")
-        .copyId(copy.getId())
-        .orderId(order.getId())
-        .build();
+    var request =
+        StockMovementRequest.builder()
+            .quantity(3)
+            .movementType(MovementTypeEnum.SALE)
+            .reason("Sale")
+            .copyId(copy.getId())
+            .orderId(order.getId())
+            .build();
     when(copyRepository.findById(copy.getId())).thenReturn(Optional.of(copy));
     when(orderRepository.findById(order.getId())).thenReturn(Optional.of(order));
     when(stockMovementRepository.save(any(StockMovement.class)))
@@ -163,11 +164,12 @@ class StockMovementServiceTest {
   @Test
   void create_throws_when_copy_not_found() {
     var copyId = UUID.randomUUID();
-    var request = StockMovementRequest.builder()
-        .quantity(1)
-        .movementType(MovementTypeEnum.RESTOCK)
-        .copyId(copyId)
-        .build();
+    var request =
+        StockMovementRequest.builder()
+            .quantity(1)
+            .movementType(MovementTypeEnum.RESTOCK)
+            .copyId(copyId)
+            .build();
     when(copyRepository.findById(copyId)).thenReturn(Optional.empty());
 
     assertThrows(EntityNotFoundException.class, () -> stockMovementService.create(request));
@@ -177,12 +179,13 @@ class StockMovementServiceTest {
   void create_throws_when_order_not_found() {
     var copy = buildCopy();
     var orderId = UUID.randomUUID();
-    var request = StockMovementRequest.builder()
-        .quantity(1)
-        .movementType(MovementTypeEnum.SALE)
-        .copyId(copy.getId())
-        .orderId(orderId)
-        .build();
+    var request =
+        StockMovementRequest.builder()
+            .quantity(1)
+            .movementType(MovementTypeEnum.SALE)
+            .copyId(copy.getId())
+            .orderId(orderId)
+            .build();
     when(copyRepository.findById(copy.getId())).thenReturn(Optional.of(copy));
     when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
 
@@ -192,12 +195,13 @@ class StockMovementServiceTest {
   @Test
   void create_saves_with_correct_fields() {
     var copy = buildCopy();
-    var request = StockMovementRequest.builder()
-        .quantity(10)
-        .movementType(MovementTypeEnum.LOSS)
-        .reason("Damaged goods")
-        .copyId(copy.getId())
-        .build();
+    var request =
+        StockMovementRequest.builder()
+            .quantity(10)
+            .movementType(MovementTypeEnum.LOSS)
+            .reason("Damaged goods")
+            .copyId(copy.getId())
+            .build();
     when(copyRepository.findById(copy.getId())).thenReturn(Optional.of(copy));
     var captor = ArgumentCaptor.forClass(StockMovement.class);
     when(stockMovementRepository.save(captor.capture()))
@@ -249,19 +253,17 @@ class StockMovementServiceTest {
         .isbn("9782070612758")
         .format(FormatEnum.PAPERBACK)
         .price(BigDecimal.TEN)
-        .book(Book.builder()
-            .id(UUID.randomUUID())
-            .title("Test Book")
-            .language("English")
-            .createdAt(Instant.now())
-            .build())
+        .book(
+            Book.builder()
+                .id(UUID.randomUUID())
+                .title("Test Book")
+                .language("English")
+                .createdAt(Instant.now())
+                .build())
         .build();
   }
 
   private Order buildOrder() {
-    return Order.builder()
-        .id(UUID.randomUUID())
-        .totalAmount(BigDecimal.TEN)
-        .build();
+    return Order.builder().id(UUID.randomUUID()).totalAmount(BigDecimal.TEN).build();
   }
 }

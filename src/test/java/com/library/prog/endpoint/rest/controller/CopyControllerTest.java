@@ -51,11 +51,12 @@ class CopyControllerTest extends FacadeIT {
     var editorRes = rest.postForEntity("/editors", editorReq, EditorResponse.class).getBody();
     publisherId = editorRes.id();
 
-    var copyReq = CopyRequest.builder()
-        .isbn("9990000000001")
-        .format(FormatEnum.PAPERBACK)
-        .bookId(bookId)
-        .build();
+    var copyReq =
+        CopyRequest.builder()
+            .isbn("9990000000001")
+            .format(FormatEnum.PAPERBACK)
+            .bookId(bookId)
+            .build();
     var copyRes = rest.postForEntity("/copies", copyReq, CopyResponse.class).getBody();
     copyId = copyRes.id();
   }
@@ -189,8 +190,10 @@ class CopyControllerTest extends FacadeIT {
 
   @Test
   void get_copy_stock() {
-    rest.postForEntity("/stocks",
-        StockRequest.builder().copyId(copyId).alertThreshold(5).build(), StockResponse.class);
+    rest.postForEntity(
+        "/stocks",
+        StockRequest.builder().copyId(copyId).alertThreshold(5).build(),
+        StockResponse.class);
 
     var response = rest.getForEntity("/copies/" + copyId + "/stock", StockResponse.class);
 
@@ -201,9 +204,12 @@ class CopyControllerTest extends FacadeIT {
 
   @Test
   void get_copy_movements() {
-    var stock = rest.postForEntity("/stocks",
-        StockRequest.builder().copyId(copyId).build(), StockResponse.class).getBody();
-    rest.patchForObject("/stocks/" + stock.id() + "/adjust",
+    var stock =
+        rest.postForEntity(
+                "/stocks", StockRequest.builder().copyId(copyId).build(), StockResponse.class)
+            .getBody();
+    rest.patchForObject(
+        "/stocks/" + stock.id() + "/adjust",
         StockAdjustRequest.builder()
             .quantity(5)
             .movementType(MovementTypeEnum.RESTOCK)
@@ -211,8 +217,8 @@ class CopyControllerTest extends FacadeIT {
             .build(),
         StockResponse.class);
 
-    var response = rest.getForEntity("/copies/" + copyId + "/movements",
-        StockMovementResponse[].class);
+    var response =
+        rest.getForEntity("/copies/" + copyId + "/movements", StockMovementResponse[].class);
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertTrue(response.getBody().length >= 1);
@@ -233,4 +239,3 @@ class CopyControllerTest extends FacadeIT {
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
   }
 }
-

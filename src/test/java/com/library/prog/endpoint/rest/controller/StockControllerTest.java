@@ -30,12 +30,13 @@ class StockControllerTest extends FacadeIT {
     var bookReq = BookRequest.builder().title("Test Book").build();
     var bookRes = rest.postForEntity("/books", bookReq, BookResponse.class).getBody();
 
-    var copyReq = CopyRequest.builder()
-        .isbn("9782070612758")
-        .format(FormatEnum.PAPERBACK)
-        .price(new BigDecimal("12.99"))
-        .bookId(bookRes.id())
-        .build();
+    var copyReq =
+        CopyRequest.builder()
+            .isbn("9782070612758")
+            .format(FormatEnum.PAPERBACK)
+            .price(new BigDecimal("12.99"))
+            .bookId(bookRes.id())
+            .build();
     var copyRes = rest.postForEntity("/copies", copyReq, CopyResponse.class).getBody();
     copyId = copyRes.id();
   }
@@ -58,8 +59,10 @@ class StockControllerTest extends FacadeIT {
 
   @Test
   void find_stock_by_id() {
-    var created = rest.postForEntity("/stocks",
-        StockRequest.builder().copyId(copyId).build(), StockResponse.class).getBody();
+    var created =
+        rest.postForEntity(
+                "/stocks", StockRequest.builder().copyId(copyId).build(), StockResponse.class)
+            .getBody();
 
     var response = rest.getForEntity("/stocks/" + created.id(), StockResponse.class);
 
@@ -70,8 +73,8 @@ class StockControllerTest extends FacadeIT {
 
   @Test
   void find_stock_by_copy_id() {
-    rest.postForEntity("/stocks",
-        StockRequest.builder().copyId(copyId).build(), StockResponse.class);
+    rest.postForEntity(
+        "/stocks", StockRequest.builder().copyId(copyId).build(), StockResponse.class);
 
     var response = rest.getForEntity("/stocks/by-copy?copyId=" + copyId, StockResponse.class);
 
@@ -81,8 +84,8 @@ class StockControllerTest extends FacadeIT {
 
   @Test
   void list_all_stocks() {
-    rest.postForEntity("/stocks",
-        StockRequest.builder().copyId(copyId).build(), StockResponse.class);
+    rest.postForEntity(
+        "/stocks", StockRequest.builder().copyId(copyId).build(), StockResponse.class);
 
     var response = rest.getForEntity("/stocks", StockResponse[].class);
 
@@ -92,8 +95,12 @@ class StockControllerTest extends FacadeIT {
 
   @Test
   void update_stock_alert_threshold() {
-    var created = rest.postForEntity("/stocks",
-        StockRequest.builder().copyId(copyId).alertThreshold(5).build(), StockResponse.class).getBody();
+    var created =
+        rest.postForEntity(
+                "/stocks",
+                StockRequest.builder().copyId(copyId).alertThreshold(5).build(),
+                StockResponse.class)
+            .getBody();
     var updateReq = StockRequest.builder().copyId(copyId).alertThreshold(20).build();
 
     rest.put("/stocks/" + created.id(), updateReq);
@@ -104,16 +111,19 @@ class StockControllerTest extends FacadeIT {
 
   @Test
   void adjust_stock_restock() {
-    var created = rest.postForEntity("/stocks",
-        StockRequest.builder().copyId(copyId).build(), StockResponse.class).getBody();
-    var adjustReq = StockAdjustRequest.builder()
-        .quantity(10)
-        .movementType(MovementTypeEnum.RESTOCK)
-        .reason("Initial stock")
-        .build();
+    var created =
+        rest.postForEntity(
+                "/stocks", StockRequest.builder().copyId(copyId).build(), StockResponse.class)
+            .getBody();
+    var adjustReq =
+        StockAdjustRequest.builder()
+            .quantity(10)
+            .movementType(MovementTypeEnum.RESTOCK)
+            .reason("Initial stock")
+            .build();
 
-    var response = rest.patchForObject(
-        "/stocks/" + created.id() + "/adjust", adjustReq, StockResponse.class);
+    var response =
+        rest.patchForObject("/stocks/" + created.id() + "/adjust", adjustReq, StockResponse.class);
 
     assertEquals(10, response.availableQuantity());
     assertFalse(response.outOfStock());
@@ -121,27 +131,36 @@ class StockControllerTest extends FacadeIT {
 
   @Test
   void adjust_stock_sale() {
-    var created = rest.postForEntity("/stocks",
-        StockRequest.builder().copyId(copyId).build(), StockResponse.class).getBody();
-    rest.patchForObject("/stocks/" + created.id() + "/adjust",
+    var created =
+        rest.postForEntity(
+                "/stocks", StockRequest.builder().copyId(copyId).build(), StockResponse.class)
+            .getBody();
+    rest.patchForObject(
+        "/stocks/" + created.id() + "/adjust",
         StockAdjustRequest.builder().quantity(10).movementType(MovementTypeEnum.RESTOCK).build(),
         StockResponse.class);
 
-    var response = rest.patchForObject("/stocks/" + created.id() + "/adjust",
-        StockAdjustRequest.builder().quantity(3).movementType(MovementTypeEnum.SALE).build(),
-        StockResponse.class);
+    var response =
+        rest.patchForObject(
+            "/stocks/" + created.id() + "/adjust",
+            StockAdjustRequest.builder().quantity(3).movementType(MovementTypeEnum.SALE).build(),
+            StockResponse.class);
 
     assertEquals(7, response.availableQuantity());
   }
 
   @Test
   void adjust_stock_insufficient_sale_returns_400() {
-    var created = rest.postForEntity("/stocks",
-        StockRequest.builder().copyId(copyId).build(), StockResponse.class).getBody();
+    var created =
+        rest.postForEntity(
+                "/stocks", StockRequest.builder().copyId(copyId).build(), StockResponse.class)
+            .getBody();
 
-    var response = rest.patchForObject("/stocks/" + created.id() + "/adjust",
-        StockAdjustRequest.builder().quantity(10).movementType(MovementTypeEnum.SALE).build(),
-        String.class);
+    var response =
+        rest.patchForObject(
+            "/stocks/" + created.id() + "/adjust",
+            StockAdjustRequest.builder().quantity(10).movementType(MovementTypeEnum.SALE).build(),
+            String.class);
 
     assertTrue(
         response.contains("Insufficient stock") || response.contains("insufficient"),
@@ -150,44 +169,58 @@ class StockControllerTest extends FacadeIT {
 
   @Test
   void adjust_stock_loss() {
-    var created = rest.postForEntity("/stocks",
-        StockRequest.builder().copyId(copyId).build(), StockResponse.class).getBody();
-    rest.patchForObject("/stocks/" + created.id() + "/adjust",
+    var created =
+        rest.postForEntity(
+                "/stocks", StockRequest.builder().copyId(copyId).build(), StockResponse.class)
+            .getBody();
+    rest.patchForObject(
+        "/stocks/" + created.id() + "/adjust",
         StockAdjustRequest.builder().quantity(10).movementType(MovementTypeEnum.RESTOCK).build(),
         StockResponse.class);
 
-    var response = rest.patchForObject("/stocks/" + created.id() + "/adjust",
-        StockAdjustRequest.builder().quantity(4).movementType(MovementTypeEnum.LOSS).build(),
-        StockResponse.class);
+    var response =
+        rest.patchForObject(
+            "/stocks/" + created.id() + "/adjust",
+            StockAdjustRequest.builder().quantity(4).movementType(MovementTypeEnum.LOSS).build(),
+            StockResponse.class);
 
     assertEquals(6, response.availableQuantity());
   }
 
   @Test
   void adjust_stock_customer_return() {
-    var created = rest.postForEntity("/stocks",
-        StockRequest.builder().copyId(copyId).build(), StockResponse.class).getBody();
-    rest.patchForObject("/stocks/" + created.id() + "/adjust",
+    var created =
+        rest.postForEntity(
+                "/stocks", StockRequest.builder().copyId(copyId).build(), StockResponse.class)
+            .getBody();
+    rest.patchForObject(
+        "/stocks/" + created.id() + "/adjust",
         StockAdjustRequest.builder().quantity(10).movementType(MovementTypeEnum.RESTOCK).build(),
         StockResponse.class);
-    rest.patchForObject("/stocks/" + created.id() + "/adjust",
+    rest.patchForObject(
+        "/stocks/" + created.id() + "/adjust",
         StockAdjustRequest.builder().quantity(2).movementType(MovementTypeEnum.SALE).build(),
         StockResponse.class);
 
-    var response = rest.patchForObject("/stocks/" + created.id() + "/adjust",
-        StockAdjustRequest.builder().quantity(1).movementType(MovementTypeEnum.CUSTOMER_RETURN).build(),
-        StockResponse.class);
+    var response =
+        rest.patchForObject(
+            "/stocks/" + created.id() + "/adjust",
+            StockAdjustRequest.builder()
+                .quantity(1)
+                .movementType(MovementTypeEnum.CUSTOMER_RETURN)
+                .build(),
+            StockResponse.class);
 
     assertEquals(9, response.availableQuantity());
   }
 
   @Test
   void return_400_when_stock_duplicate() {
-    rest.postForEntity("/stocks",
-        StockRequest.builder().copyId(copyId).build(), StockResponse.class);
+    rest.postForEntity(
+        "/stocks", StockRequest.builder().copyId(copyId).build(), StockResponse.class);
 
-    var response = rest.postForEntity("/stocks",
-        StockRequest.builder().copyId(copyId).build(), String.class);
+    var response =
+        rest.postForEntity("/stocks", StockRequest.builder().copyId(copyId).build(), String.class);
 
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
   }
@@ -201,13 +234,14 @@ class StockControllerTest extends FacadeIT {
 
   @Test
   void delete_stock_without_movements() {
-    var created = rest.postForEntity("/stocks",
-        StockRequest.builder().copyId(copyId).build(), StockResponse.class).getBody();
+    var created =
+        rest.postForEntity(
+                "/stocks", StockRequest.builder().copyId(copyId).build(), StockResponse.class)
+            .getBody();
 
     rest.delete("/stocks/" + created.id());
 
     var found = rest.getForEntity("/stocks/" + created.id(), StockResponse.class);
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, found.getStatusCode());
   }
-
 }

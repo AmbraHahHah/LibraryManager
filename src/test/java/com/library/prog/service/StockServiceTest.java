@@ -92,7 +92,8 @@ class StockServiceTest {
     var request = StockRequest.builder().copyId(copy.getId()).build();
     when(copyRepository.findById(copy.getId())).thenReturn(Optional.of(copy));
     when(stockRepository.findByCopyId(copy.getId())).thenReturn(Optional.empty());
-    when(stockRepository.save(any(Stock.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    when(stockRepository.save(any(Stock.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     var result = stockService.create(request);
 
@@ -108,7 +109,8 @@ class StockServiceTest {
     var request = StockRequest.builder().copyId(copy.getId()).alertThreshold(10).build();
     when(copyRepository.findById(copy.getId())).thenReturn(Optional.of(copy));
     when(stockRepository.findByCopyId(copy.getId())).thenReturn(Optional.empty());
-    when(stockRepository.save(any(Stock.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    when(stockRepository.save(any(Stock.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     var result = stockService.create(request);
 
@@ -129,7 +131,8 @@ class StockServiceTest {
     var copy = buildCopy();
     var request = StockRequest.builder().copyId(copy.getId()).build();
     when(copyRepository.findById(copy.getId())).thenReturn(Optional.of(copy));
-    when(stockRepository.findByCopyId(copy.getId())).thenReturn(Optional.of(buildStock(copy, 5, 0)));
+    when(stockRepository.findByCopyId(copy.getId()))
+        .thenReturn(Optional.of(buildStock(copy, 5, 0)));
 
     assertThrows(IllegalStateException.class, () -> stockService.create(request));
   }
@@ -140,7 +143,8 @@ class StockServiceTest {
     var stock = buildStock(copy, 10, 2);
     var request = StockRequest.builder().copyId(copy.getId()).alertThreshold(15).build();
     when(stockRepository.findById(stock.getId())).thenReturn(Optional.of(stock));
-    when(stockRepository.save(any(Stock.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    when(stockRepository.save(any(Stock.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     var result = stockService.update(stock.getId(), request);
 
@@ -154,7 +158,8 @@ class StockServiceTest {
     stock.setAlertThreshold(8);
     var request = StockRequest.builder().copyId(copy.getId()).build();
     when(stockRepository.findById(stock.getId())).thenReturn(Optional.of(stock));
-    when(stockRepository.save(any(Stock.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    when(stockRepository.save(any(Stock.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     var result = stockService.update(stock.getId(), request);
 
@@ -174,13 +179,15 @@ class StockServiceTest {
   void adjustStock_restock_increases_available_quantity() {
     var copy = buildCopy();
     var stock = buildStock(copy, 10, 2);
-    var request = StockAdjustRequest.builder()
-        .quantity(5)
-        .movementType(MovementTypeEnum.RESTOCK)
-        .reason("New shipment")
-        .build();
+    var request =
+        StockAdjustRequest.builder()
+            .quantity(5)
+            .movementType(MovementTypeEnum.RESTOCK)
+            .reason("New shipment")
+            .build();
     when(stockRepository.findById(stock.getId())).thenReturn(Optional.of(stock));
-    when(stockRepository.save(any(Stock.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    when(stockRepository.save(any(Stock.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
     when(stockMovementRepository.save(any(StockMovement.class)))
         .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -195,13 +202,15 @@ class StockServiceTest {
   void adjustStock_sale_decreases_available_quantity() {
     var copy = buildCopy();
     var stock = buildStock(copy, 10, 2);
-    var request = StockAdjustRequest.builder()
-        .quantity(3)
-        .movementType(MovementTypeEnum.SALE)
-        .reason("Customer purchase")
-        .build();
+    var request =
+        StockAdjustRequest.builder()
+            .quantity(3)
+            .movementType(MovementTypeEnum.SALE)
+            .reason("Customer purchase")
+            .build();
     when(stockRepository.findById(stock.getId())).thenReturn(Optional.of(stock));
-    when(stockRepository.save(any(Stock.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    when(stockRepository.save(any(Stock.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
     when(stockMovementRepository.save(any(StockMovement.class)))
         .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -215,27 +224,31 @@ class StockServiceTest {
   void adjustStock_sale_throws_when_insufficient_stock() {
     var copy = buildCopy();
     var stock = buildStock(copy, 5, 2);
-    var request = StockAdjustRequest.builder()
-        .quantity(10)
-        .movementType(MovementTypeEnum.SALE)
-        .reason("Too many")
-        .build();
+    var request =
+        StockAdjustRequest.builder()
+            .quantity(10)
+            .movementType(MovementTypeEnum.SALE)
+            .reason("Too many")
+            .build();
     when(stockRepository.findById(stock.getId())).thenReturn(Optional.of(stock));
 
-    assertThrows(IllegalStateException.class, () -> stockService.adjustStock(stock.getId(), request));
+    assertThrows(
+        IllegalStateException.class, () -> stockService.adjustStock(stock.getId(), request));
   }
 
   @Test
   void adjustStock_loss_reduces_quantity_when_sufficient() {
     var copy = buildCopy();
     var stock = buildStock(copy, 10, 2);
-    var request = StockAdjustRequest.builder()
-        .quantity(3)
-        .movementType(MovementTypeEnum.LOSS)
-        .reason("Damaged")
-        .build();
+    var request =
+        StockAdjustRequest.builder()
+            .quantity(3)
+            .movementType(MovementTypeEnum.LOSS)
+            .reason("Damaged")
+            .build();
     when(stockRepository.findById(stock.getId())).thenReturn(Optional.of(stock));
-    when(stockRepository.save(any(Stock.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    when(stockRepository.save(any(Stock.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
     when(stockMovementRepository.save(any(StockMovement.class)))
         .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -249,13 +262,15 @@ class StockServiceTest {
   void adjustStock_loss_zeroes_quantity_when_insufficient() {
     var copy = buildCopy();
     var stock = buildStock(copy, 3, 2);
-    var request = StockAdjustRequest.builder()
-        .quantity(10)
-        .movementType(MovementTypeEnum.LOSS)
-        .reason("Total loss")
-        .build();
+    var request =
+        StockAdjustRequest.builder()
+            .quantity(10)
+            .movementType(MovementTypeEnum.LOSS)
+            .reason("Total loss")
+            .build();
     when(stockRepository.findById(stock.getId())).thenReturn(Optional.of(stock));
-    when(stockRepository.save(any(Stock.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    when(stockRepository.save(any(Stock.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
     when(stockMovementRepository.save(any(StockMovement.class)))
         .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -269,13 +284,15 @@ class StockServiceTest {
   void adjustStock_customer_return_increases_available_quantity() {
     var copy = buildCopy();
     var stock = buildStock(copy, 10, 2);
-    var request = StockAdjustRequest.builder()
-        .quantity(2)
-        .movementType(MovementTypeEnum.CUSTOMER_RETURN)
-        .reason("Returned by customer")
-        .build();
+    var request =
+        StockAdjustRequest.builder()
+            .quantity(2)
+            .movementType(MovementTypeEnum.CUSTOMER_RETURN)
+            .reason("Returned by customer")
+            .build();
     when(stockRepository.findById(stock.getId())).thenReturn(Optional.of(stock));
-    when(stockRepository.save(any(Stock.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    when(stockRepository.save(any(Stock.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
     when(stockMovementRepository.save(any(StockMovement.class)))
         .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -289,13 +306,15 @@ class StockServiceTest {
   void adjustStock_creates_movement_record() {
     var copy = buildCopy();
     var stock = buildStock(copy, 10, 2);
-    var request = StockAdjustRequest.builder()
-        .quantity(5)
-        .movementType(MovementTypeEnum.RESTOCK)
-        .reason("Restock")
-        .build();
+    var request =
+        StockAdjustRequest.builder()
+            .quantity(5)
+            .movementType(MovementTypeEnum.RESTOCK)
+            .reason("Restock")
+            .build();
     when(stockRepository.findById(stock.getId())).thenReturn(Optional.of(stock));
-    when(stockRepository.save(any(Stock.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    when(stockRepository.save(any(Stock.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
     var movementCaptor = ArgumentCaptor.forClass(StockMovement.class);
     when(stockMovementRepository.save(movementCaptor.capture()))
         .thenAnswer(invocation -> invocation.getArgument(0));
@@ -313,10 +332,8 @@ class StockServiceTest {
   @Test
   void adjustStock_throws_when_not_found() {
     var id = UUID.randomUUID();
-    var request = StockAdjustRequest.builder()
-        .quantity(1)
-        .movementType(MovementTypeEnum.RESTOCK)
-        .build();
+    var request =
+        StockAdjustRequest.builder().quantity(1).movementType(MovementTypeEnum.RESTOCK).build();
     when(stockRepository.findById(id)).thenReturn(Optional.empty());
 
     assertThrows(EntityNotFoundException.class, () -> stockService.adjustStock(id, request));
@@ -389,18 +406,20 @@ class StockServiceTest {
     var result = stockService.getStockByEdition(book.getId());
 
     assertEquals(2, result.editions().size());
-    var pbEdition = result.editions().stream()
-        .filter(e -> "PAPERBACK".equals(e.format()))
-        .findFirst()
-        .orElseThrow();
+    var pbEdition =
+        result.editions().stream()
+            .filter(e -> "PAPERBACK".equals(e.format()))
+            .findFirst()
+            .orElseThrow();
     assertEquals(1, pbEdition.copyCount());
     assertEquals(8, pbEdition.availableStock());
     assertEquals(2, pbEdition.reservedQuantity());
 
-    var hcEdition = result.editions().stream()
-        .filter(e -> "HARDCOVER".equals(e.format()))
-        .findFirst()
-        .orElseThrow();
+    var hcEdition =
+        result.editions().stream()
+            .filter(e -> "HARDCOVER".equals(e.format()))
+            .findFirst()
+            .orElseThrow();
     assertEquals(1, hcEdition.copyCount());
     assertEquals(4, hcEdition.availableStock());
     assertEquals(1, hcEdition.reservedQuantity());
