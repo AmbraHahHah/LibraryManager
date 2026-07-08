@@ -48,9 +48,8 @@ class RevenueControllerTest extends FacadeIT {
   void get_revenue_by_genre_contains_known_genres() {
     var response = rest.getForEntity("/revenue/by-genre", RevenueByGenreResponse[].class);
 
-    var genres = java.util.Arrays.stream(response.getBody())
-        .map(RevenueByGenreResponse::genre)
-        .toList();
+    var genres =
+        java.util.Arrays.stream(response.getBody()).map(RevenueByGenreResponse::genre).toList();
 
     assertTrue(genres.contains("Fantasy"));
     assertTrue(genres.contains("Fiction"));
