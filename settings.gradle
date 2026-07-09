@@ -1,1 +1,7 @@
+try {
+  "bash .shell/restore-poja-deps.sh".execute().waitFor()
+} catch (Exception e) {
+  logger.warn("Could not restore Poja dependencies", e)
+}
+
 rootProject.name = 'library-e3714c9d'
