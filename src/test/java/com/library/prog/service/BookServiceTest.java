@@ -110,6 +110,52 @@ class BookServiceTest {
   }
 
   @Test
+  void search_returns_matching_books() {
+    var book = buildBook("Searched Book");
+    when(bookRepository.search("Search", null, null)).thenReturn(List.of(book));
+
+    var result = bookService.search("Search", null, null);
+
+    assertEquals(1, result.size());
+    assertEquals("Searched Book", result.getFirst().title());
+  }
+
+  @Test
+  void search_returns_all_when_params_null() {
+    var book1 = buildBook("Book A");
+    var book2 = buildBook("Book B");
+    when(bookRepository.search(null, null, null)).thenReturn(List.of(book1, book2));
+
+    var result = bookService.search(null, null, null);
+
+    assertEquals(2, result.size());
+  }
+
+  @Test
+  void findByAuthorId_returns_books() {
+    var book = buildBook("Author Book");
+    var authorId = UUID.randomUUID();
+    when(bookRepository.findByAuthorId(authorId)).thenReturn(List.of(book));
+
+    var result = bookService.findByAuthorId(authorId);
+
+    assertEquals(1, result.size());
+    assertEquals("Author Book", result.getFirst().title());
+  }
+
+  @Test
+  void findByCategoryId_returns_books() {
+    var book = buildBook("Category Book");
+    var categoryId = UUID.randomUUID();
+    when(bookRepository.findByCategoryId(categoryId)).thenReturn(List.of(book));
+
+    var result = bookService.findByCategoryId(categoryId);
+
+    assertEquals(1, result.size());
+    assertEquals("Category Book", result.getFirst().title());
+  }
+
+  @Test
   void delete_removes_book_when_exists() {
     var id = UUID.randomUUID();
     when(bookRepository.existsById(id)).thenReturn(true);

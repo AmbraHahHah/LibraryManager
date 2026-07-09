@@ -27,6 +27,16 @@ public class ReviewService {
   }
 
   @Transactional(readOnly = true)
+  public List<ReviewResponse> findByBookId(UUID bookId) {
+    return reviewRepository.findByBookId(bookId).stream().map(this::toResponse).toList();
+  }
+
+  @Transactional(readOnly = true)
+  public List<ReviewResponse> findByClientId(UUID clientId) {
+    return reviewRepository.findByClientId(clientId).stream().map(this::toResponse).toList();
+  }
+
+  @Transactional(readOnly = true)
   public ReviewResponse findById(UUID id) {
     return reviewRepository
         .findById(id)

@@ -69,6 +69,29 @@ class ControllerMockMvcTest {
   }
 
   @Test
+  void book_search() throws Exception {
+    var response = new BookResponse(UUID.randomUUID(), "Found", null, "English", Instant.now());
+    when(bookService.search("test", null, null)).thenReturn(List.of(response));
+
+    mockMvc
+        .perform(get("/books/search?title=test"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.length()").value(1))
+        .andExpect(jsonPath("$[0].title").value("Found"));
+  }
+
+  @Test
+  void book_search_all_params() throws Exception {
+    var response = new BookResponse(UUID.randomUUID(), "Match", null, "English", Instant.now());
+    when(bookService.search("Match", "Hugo", "Fiction")).thenReturn(List.of(response));
+
+    mockMvc
+        .perform(get("/books/search?title=Match&author=Hugo&category=Fiction"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].title").value("Match"));
+  }
+
+  @Test
   void book_findById() throws Exception {
     var id = UUID.randomUUID();
     var response = new BookResponse(id, "Found", null, "English", Instant.now());
@@ -134,6 +157,33 @@ class ControllerMockMvcTest {
         .perform(get("/books/" + bookId + "/stock"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.totalAvailableStock").value(10));
+  }
+
+  @Test
+  void book_getCopies() throws Exception {
+    var bookId = UUID.randomUUID();
+    var response =
+        new CopyResponse(
+            UUID.randomUUID(), "ISBN", FormatEnum.PAPERBACK, BigDecimal.TEN, 100, null, null, null,
+            bookId, null);
+    when(copyService.findByBookId(bookId)).thenReturn(List.of(response));
+
+    mockMvc
+        .perform(get("/books/" + bookId + "/copies"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.length()").value(1));
+  }
+
+  @Test
+  void book_getReviews() throws Exception {
+    var bookId = UUID.randomUUID();
+    var response = ReviewResponse.builder().id(UUID.randomUUID()).rating(5).build();
+    when(reviewService.findByBookId(bookId)).thenReturn(List.of(response));
+
+    mockMvc
+        .perform(get("/books/" + bookId + "/reviews"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].rating").value(5));
   }
 
   @Test
@@ -532,6 +582,18 @@ class ControllerMockMvcTest {
   }
 
   @Test
+  void author_getBooks() throws Exception {
+    var authorId = UUID.randomUUID();
+    var response = new BookResponse(UUID.randomUUID(), "Book Title", null, "English", Instant.now());
+    when(bookService.findByAuthorId(authorId)).thenReturn(List.of(response));
+
+    mockMvc
+        .perform(get("/authors/" + authorId + "/books"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].title").value("Book Title"));
+  }
+
+  @Test
   void author_delete() throws Exception {
     var id = UUID.randomUUID();
     mockMvc.perform(delete("/authors/" + id)).andExpect(status().isNoContent());
@@ -603,6 +665,18 @@ class ControllerMockMvcTest {
   }
 
   @Test
+  void category_getBooks() throws Exception {
+    var categoryId = UUID.randomUUID();
+    var response = new BookResponse(UUID.randomUUID(), "Cat Book", null, "English", Instant.now());
+    when(bookService.findByCategoryId(categoryId)).thenReturn(List.of(response));
+
+    mockMvc
+        .perform(get("/categories/" + categoryId + "/books"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].title").value("Cat Book"));
+  }
+
+  @Test
   void category_delete() throws Exception {
     var id = UUID.randomUUID();
     mockMvc.perform(delete("/categories/" + id)).andExpect(status().isNoContent());
@@ -662,6 +736,30 @@ class ControllerMockMvcTest {
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.lastName").value("Updated"));
+  }
+
+  @Test
+  void client_getOrders() throws Exception {
+    var clientId = UUID.randomUUID();
+    var response = OrderResponse.builder().id(UUID.randomUUID()).status(OrderStatusEnum.PENDING).build();
+    when(orderService.findByClientId(clientId)).thenReturn(List.of(response));
+
+    mockMvc
+        .perform(get("/clients/" + clientId + "/orders"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].status").value("PENDING"));
+  }
+
+  @Test
+  void client_getReviews() throws Exception {
+    var clientId = UUID.randomUUID();
+    var response = ReviewResponse.builder().id(UUID.randomUUID()).rating(3).build();
+    when(reviewService.findByClientId(clientId)).thenReturn(List.of(response));
+
+    mockMvc
+        .perform(get("/clients/" + clientId + "/reviews"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].rating").value(3));
   }
 
   @Test

@@ -40,6 +40,13 @@ public class OrderService {
   }
 
   @Transactional(readOnly = true)
+  public List<OrderResponse> findByClientId(UUID clientId) {
+    return orderRepository.findByCustomerId(clientId).stream()
+        .map(this::toResponseWithLines)
+        .toList();
+  }
+
+  @Transactional(readOnly = true)
   public OrderResponse findById(UUID id) {
     return orderRepository
         .findById(id)

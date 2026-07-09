@@ -2,7 +2,9 @@ package com.library.prog.endpoint.rest.controller;
 
 import com.library.prog.dto.request.AuthorRequest;
 import com.library.prog.dto.response.AuthorResponse;
+import com.library.prog.dto.response.BookResponse;
 import com.library.prog.service.AuthorService;
+import com.library.prog.service.BookService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthorController {
 
   private final AuthorService authorService;
+  private final BookService bookService;
 
   @GetMapping
   public List<AuthorResponse> findAll() {
@@ -35,6 +38,11 @@ public class AuthorController {
   @GetMapping("/{id}")
   public AuthorResponse findById(@PathVariable UUID id) {
     return authorService.findById(id);
+  }
+
+  @GetMapping("/{id}/books")
+  public List<BookResponse> getBooks(@PathVariable UUID id) {
+    return bookService.findByAuthorId(id);
   }
 
   @PostMapping
