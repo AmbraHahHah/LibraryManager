@@ -13,14 +13,14 @@
 
 ## 3. Validation de vente avec le stock
 
-- [ ] Créer `OrderService.create()` avec validation stock
-- [ ] Vérifier `Stock.availableStock >= OrderLine.quantity` pour chaque ligne
-- [ ] Réserver/déduire le stock à la confirmation
-- [ ] Libérer le stock à l'annulation
-- [ ] Créer `OrderController` (CRUD)
-- [ ] Créer `OrderLineService` + `OrderLineController`
-- [ ] DTOs : `OrderRequest`, `OrderResponse`, `OrderLineRequest`, `OrderLineResponse`
-- [ ] Créer `OrderLineRepository`
+- [X] Créer `OrderService.create()` avec validation stock
+- [X] Vérifier `Stock.availableStock >= OrderLine.quantity` pour chaque ligne
+- [X] Réserver/déduire le stock à la confirmation
+- [X] Libérer le stock à l'annulation
+- [X] Créer `OrderController` (CRUD + confirm/cancel)
+- [X] Créer `OrderLineService` + `OrderLineController`
+- [X] DTOs : `OrderRequest`, `OrderResponse`, `OrderLineRequest`, `OrderLineResponse`
+- [X] Créer `OrderLineRepository`
 
 ## 4. Endpoints requis + doc API
 
@@ -40,14 +40,14 @@
 - [ ] `GET /categories/{id}/books`
 - [ ] `GET /clients/{id}/orders`
 - [ ] `GET /clients/{id}/reviews`
-- [ ] `GET /copies/{id}/stock`
-- [ ] `GET /copies/{id}/movements`
+- [X] `GET /copies/{id}/stock`
+- [X] `GET /copies/{id}/movements`
 
 ### Exception handling global
-- [ ] `@ControllerAdvice` : EntityNotFoundException → 404, MethodArgumentNotValidException → 400, etc.
+- [X] `@ControllerAdvice` : EntityNotFoundException → 404, MethodArgumentNotValidException → 400, etc.
 
 ### API Documentation
-- [ ] Remplir `docs/api.yml` (OpenAPI 3.0)
+- [X] Remplir `docs/api.yml` (OpenAPI 3.0)
 - [ ] Ou intégrer SpringDoc OpenAPI (swagger-ui)
 
 ### Préprod + Prod (données différentes)
@@ -61,10 +61,10 @@
 - [ ] Passer `minimum = 0` → `minimum = 0.8` dans `jacocoTestCoverageVerification`
 
 ### Tests unitaires (Mockito)
-- [ ] `StockServiceTest`
-- [ ] `StockMovementServiceTest`
+- [X] `StockServiceTest`
+- [X] `StockMovementServiceTest`
 - [ ] `OrderServiceTest`
-- [ ] `RevenueServiceTest`
+- [X] `RevenueServiceTest`
 - [ ] `AuthorServiceTest`
 - [ ] `CategoryServiceTest`
 - [ ] `ClientServiceTest`
@@ -72,7 +72,7 @@
 
 ### Tests d'intégration (Testcontainers)
 - [ ] Contrôleurs existants (Book, Copy, Editor — déjà existants)
-- [ ] Nouveaux contrôleurs (Stock, StockMovement, Order, etc.)
+- [X] Nouveaux contrôleurs (Stock, StockMovement, Revenue — reste Order, etc.)
 
 ## Déjà fait
 - [X] StockRepository + StockMovementRepository + OrderRepository
