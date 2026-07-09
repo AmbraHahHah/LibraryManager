@@ -192,6 +192,31 @@ class CopyServiceTest {
   }
 
   @Test
+  void update_with_publisher() {
+    var book = buildBook();
+    var editor = buildEditor();
+    var existing = buildCopy("OLDISBN", book, null);
+    var request =
+        CopyRequest.builder()
+            .isbn("NEWISBN")
+            .format(FormatEnum.HARDCOVER)
+            .price(new BigDecimal("19.99"))
+            .pageCount(300)
+            .bookId(book.getId())
+            .publisherId(editor.getId())
+            .build();
+    when(copyRepository.findById(existing.getId())).thenReturn(Optional.of(existing));
+    when(bookRepository.findById(book.getId())).thenReturn(Optional.of(book));
+    when(editorRepository.findById(editor.getId())).thenReturn(Optional.of(editor));
+    when(copyRepository.save(any(Copy.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+    var result = copyService.update(existing.getId(), request);
+
+    assertEquals(editor.getId(), result.publisherId());
+    assertEquals(FormatEnum.HARDCOVER, result.format());
+  }
+
+  @Test
   void update_throws_when_copy_not_found() {
     var id = UUID.randomUUID();
     var book = buildBook();
@@ -214,6 +239,25 @@ class CopyServiceTest {
         CopyRequest.builder().isbn("ISBN").format(FormatEnum.PAPERBACK).bookId(bookId).build();
     when(copyRepository.findById(copy.getId())).thenReturn(Optional.of(copy));
     when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
+
+    assertThrows(EntityNotFoundException.class, () -> copyService.update(copy.getId(), request));
+  }
+
+  @Test
+  void update_throws_when_editor_not_found() {
+    var book = buildBook();
+    var editorId = UUID.randomUUID();
+    var copy = buildCopy("ISBN", buildBook(), null);
+    var request =
+        CopyRequest.builder()
+            .isbn("ISBN")
+            .format(FormatEnum.PAPERBACK)
+            .bookId(book.getId())
+            .publisherId(editorId)
+            .build();
+    when(copyRepository.findById(copy.getId())).thenReturn(Optional.of(copy));
+    when(bookRepository.findById(book.getId())).thenReturn(Optional.of(book));
+    when(editorRepository.findById(editorId)).thenReturn(Optional.empty());
 
     assertThrows(EntityNotFoundException.class, () -> copyService.update(copy.getId(), request));
   }

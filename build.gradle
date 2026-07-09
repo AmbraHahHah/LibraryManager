@@ -41,8 +41,18 @@ configurations {
 
 test {
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
-    useJUnitPlatform()
+    useJUnitPlatform {
+        excludeTags 'integration'
+    }
     finalizedBy jacocoTestCoverageVerification
+}
+
+task integrationTest(type: Test) {
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+    useJUnitPlatform {
+        includeTags 'integration'
+    }
+    shouldRunAfter test
 }
 
 jacocoTestCoverageVerification {
