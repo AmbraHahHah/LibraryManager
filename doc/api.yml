@@ -175,6 +175,31 @@ paths:
         "404":
           description: Auteur non trouvé
 
+  /authors/{id}/books:
+    get:
+      summary: Livres d'un auteur
+      tags:
+        - Authors
+      operationId: getAuthorBooks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Liste des livres de l'auteur
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BookResponse"
+        "404":
+          description: Auteur non trouvé
+
   ##############################################################################
   # Books
   ##############################################################################
@@ -285,12 +310,47 @@ paths:
         "404":
           description: Livre non trouvé
 
-  /books/{bookId}/stock:
+  /books/search:
     get:
-      summary: Stock agrégé d'un livre
+      summary: Recherche de livres par titre, auteur ou catégorie
       tags:
         - Books
-      operationId: getBookStock
+      operationId: searchBooks
+      parameters:
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filtre par titre (LIKE insensible à la casse)
+        - name: author
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filtre par nom/prénom d'auteur (LIKE insensible à la casse)
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filtre par nom de catégorie (LIKE insensible à la casse)
+      responses:
+        "200":
+          description: Résultats de la recherche
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BookResponse"
+
+  /books/{bookId}/copies:
+    get:
+      summary: Exemplaires d'un livre
+      tags:
+        - Books
+      operationId: getBookCopies
       parameters:
         - name: bookId
           in: path
@@ -300,10 +360,38 @@ paths:
             format: uuid
       responses:
         "200":
+          description: Liste des exemplaires du livre
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BookStockResponse"
+                type: array
+                items:
+                  $ref: "#/components/schemas/CopyResponse"
+
+  /books/{bookId}/reviews:
+    get:
+      summary: Avis d'un livre
+      tags:
+        - Books
+      operationId: getBookReviews
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Liste des avis du livre
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReviewResponse"
+
+  /books/{bookId}/stock:
 
   /books/{bookId}/stock-by-edition:
     get:
@@ -449,6 +537,31 @@ paths:
         "404":
           description: Catégorie non trouvée
 
+  /categories/{id}/books:
+    get:
+      summary: Livres d'une catégorie
+      tags:
+        - Categories
+      operationId: getCategoryBooks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Liste des livres de la catégorie
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BookResponse"
+        "404":
+          description: Catégorie non trouvée
+
   ##############################################################################
   # Clients
   ##############################################################################
@@ -554,6 +667,56 @@ paths:
       responses:
         "204":
           description: Supprimé
+        "404":
+          description: Client non trouvé
+
+  /clients/{id}/orders:
+    get:
+      summary: Commandes d'un client
+      tags:
+        - Clients
+      operationId: getClientOrders
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Liste des commandes du client
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrderResponse"
+        "404":
+          description: Client non trouvé
+
+  /clients/{id}/reviews:
+    get:
+      summary: Avis d'un client
+      tags:
+        - Clients
+      operationId: getClientReviews
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Liste des avis du client
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReviewResponse"
         "404":
           description: Client non trouvé
 
