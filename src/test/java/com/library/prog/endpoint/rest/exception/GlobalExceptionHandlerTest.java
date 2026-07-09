@@ -3,7 +3,6 @@ package com.library.prog.endpoint.rest.exception;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.library.prog.dto.response.ApiError;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

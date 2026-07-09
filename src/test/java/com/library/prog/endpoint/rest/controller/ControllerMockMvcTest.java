@@ -18,8 +18,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(
@@ -45,7 +45,8 @@ class ControllerMockMvcTest {
 
   @Test
   void book_findAll() throws Exception {
-    var response = new BookResponse(UUID.randomUUID(), "Title", "Summary", "English", Instant.now());
+    var response =
+        new BookResponse(UUID.randomUUID(), "Title", "Summary", "English", Instant.now());
     when(bookService.findAll()).thenReturn(List.of(response));
 
     mockMvc
@@ -70,7 +71,8 @@ class ControllerMockMvcTest {
   @Test
   void book_create() throws Exception {
     var request = new BookRequest("New Book", "Summary", "French");
-    var response = new BookResponse(UUID.randomUUID(), "New Book", "Summary", "French", Instant.now());
+    var response =
+        new BookResponse(UUID.randomUUID(), "New Book", "Summary", "French", Instant.now());
     when(bookService.create(any(BookRequest.class))).thenReturn(response);
 
     mockMvc
@@ -194,9 +196,18 @@ class ControllerMockMvcTest {
 
   @Test
   void copy_findAll() throws Exception {
-    var response = new CopyResponse(
-        UUID.randomUUID(), "ISBN", FormatEnum.PAPERBACK, BigDecimal.TEN,
-        100, null, null, null, UUID.randomUUID(), null);
+    var response =
+        new CopyResponse(
+            UUID.randomUUID(),
+            "ISBN",
+            FormatEnum.PAPERBACK,
+            BigDecimal.TEN,
+            100,
+            null,
+            null,
+            null,
+            UUID.randomUUID(),
+            null);
     when(copyService.findAll()).thenReturn(List.of(response));
 
     mockMvc.perform(get("/copies")).andExpect(status().isOk());
@@ -205,14 +216,24 @@ class ControllerMockMvcTest {
   @Test
   void copy_create() throws Exception {
     var bookId = UUID.randomUUID();
-    var request = CopyRequest.builder()
-        .isbn("9782070612758")
-        .format(FormatEnum.PAPERBACK)
-        .bookId(bookId)
-        .build();
-    var response = new CopyResponse(
-        UUID.randomUUID(), "9782070612758", FormatEnum.PAPERBACK, BigDecimal.ZERO,
-        null, null, null, null, bookId, null);
+    var request =
+        CopyRequest.builder()
+            .isbn("9782070612758")
+            .format(FormatEnum.PAPERBACK)
+            .bookId(bookId)
+            .build();
+    var response =
+        new CopyResponse(
+            UUID.randomUUID(),
+            "9782070612758",
+            FormatEnum.PAPERBACK,
+            BigDecimal.ZERO,
+            null,
+            null,
+            null,
+            null,
+            bookId,
+            null);
     when(copyService.create(any(CopyRequest.class))).thenReturn(response);
 
     mockMvc
@@ -226,10 +247,16 @@ class ControllerMockMvcTest {
   @Test
   void copy_getStock() throws Exception {
     var copyId = UUID.randomUUID();
-    var response = StockResponse.builder()
-        .id(UUID.randomUUID()).copyId(copyId).availableQuantity(5)
-        .reservedQuantity(0).availableStock(5).outOfStock(false).lowStock(false)
-        .build();
+    var response =
+        StockResponse.builder()
+            .id(UUID.randomUUID())
+            .copyId(copyId)
+            .availableQuantity(5)
+            .reservedQuantity(0)
+            .availableStock(5)
+            .outOfStock(false)
+            .lowStock(false)
+            .build();
     when(stockService.findByCopyId(copyId)).thenReturn(response);
 
     mockMvc
@@ -241,8 +268,8 @@ class ControllerMockMvcTest {
   @Test
   void copy_getMovements() throws Exception {
     var copyId = UUID.randomUUID();
-    var response = StockMovementResponse.builder()
-        .id(UUID.randomUUID()).quantity(5).copyId(copyId).build();
+    var response =
+        StockMovementResponse.builder().id(UUID.randomUUID()).quantity(5).copyId(copyId).build();
     when(stockMovementService.findByCopyId(copyId)).thenReturn(List.of(response));
 
     mockMvc
@@ -253,19 +280,31 @@ class ControllerMockMvcTest {
 
   @Test
   void stock_findAll() throws Exception {
-    var response = StockResponse.builder()
-        .id(UUID.randomUUID()).copyId(UUID.randomUUID()).availableQuantity(10).build();
+    var response =
+        StockResponse.builder()
+            .id(UUID.randomUUID())
+            .copyId(UUID.randomUUID())
+            .availableQuantity(10)
+            .build();
     when(stockService.findAll()).thenReturn(List.of(response));
 
-    mockMvc.perform(get("/stocks")).andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(1));
+    mockMvc
+        .perform(get("/stocks"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.length()").value(1));
   }
 
   @Test
   void stock_create() throws Exception {
     var copyId = UUID.randomUUID();
     var request = StockRequest.builder().copyId(copyId).alertThreshold(5).build();
-    var response = StockResponse.builder()
-        .id(UUID.randomUUID()).copyId(copyId).availableQuantity(0).alertThreshold(5).build();
+    var response =
+        StockResponse.builder()
+            .id(UUID.randomUUID())
+            .copyId(copyId)
+            .availableQuantity(0)
+            .alertThreshold(5)
+            .build();
     when(stockService.create(any(StockRequest.class))).thenReturn(response);
 
     mockMvc
@@ -281,8 +320,13 @@ class ControllerMockMvcTest {
     var id = UUID.randomUUID();
     var copyId = UUID.randomUUID();
     var request = StockRequest.builder().copyId(copyId).alertThreshold(10).build();
-    var response = StockResponse.builder()
-        .id(id).copyId(copyId).availableQuantity(0).alertThreshold(10).build();
+    var response =
+        StockResponse.builder()
+            .id(id)
+            .copyId(copyId)
+            .availableQuantity(0)
+            .alertThreshold(10)
+            .build();
     when(stockService.update(any(UUID.class), any(StockRequest.class))).thenReturn(response);
 
     mockMvc
@@ -297,11 +341,16 @@ class ControllerMockMvcTest {
   @Test
   void stock_adjust() throws Exception {
     var id = UUID.randomUUID();
-    var request = StockAdjustRequest.builder()
-        .quantity(5).movementType(MovementTypeEnum.RESTOCK).reason("Restock").build();
-    var response = StockResponse.builder()
-        .id(id).copyId(UUID.randomUUID()).availableQuantity(5).build();
-    when(stockService.adjustStock(any(UUID.class), any(StockAdjustRequest.class))).thenReturn(response);
+    var request =
+        StockAdjustRequest.builder()
+            .quantity(5)
+            .movementType(MovementTypeEnum.RESTOCK)
+            .reason("Restock")
+            .build();
+    var response =
+        StockResponse.builder().id(id).copyId(UUID.randomUUID()).availableQuantity(5).build();
+    when(stockService.adjustStock(any(UUID.class), any(StockAdjustRequest.class)))
+        .thenReturn(response);
 
     mockMvc
         .perform(
@@ -315,8 +364,7 @@ class ControllerMockMvcTest {
   @Test
   void stock_findByCopyId() throws Exception {
     var copyId = UUID.randomUUID();
-    var response = StockResponse.builder()
-        .id(UUID.randomUUID()).copyId(copyId).build();
+    var response = StockResponse.builder().id(UUID.randomUUID()).copyId(copyId).build();
     when(stockService.findByCopyId(copyId)).thenReturn(response);
 
     mockMvc
@@ -333,8 +381,12 @@ class ControllerMockMvcTest {
 
   @Test
   void stockMovement_findAll() throws Exception {
-    var response = StockMovementResponse.builder()
-        .id(UUID.randomUUID()).quantity(5).copyId(UUID.randomUUID()).build();
+    var response =
+        StockMovementResponse.builder()
+            .id(UUID.randomUUID())
+            .quantity(5)
+            .copyId(UUID.randomUUID())
+            .build();
     when(stockMovementService.findAll()).thenReturn(List.of(response));
 
     mockMvc.perform(get("/stock-movements")).andExpect(status().isOk());
@@ -343,7 +395,8 @@ class ControllerMockMvcTest {
   @Test
   void stockMovement_findById() throws Exception {
     var id = UUID.randomUUID();
-    var response = StockMovementResponse.builder().id(id).quantity(5).copyId(UUID.randomUUID()).build();
+    var response =
+        StockMovementResponse.builder().id(id).quantity(5).copyId(UUID.randomUUID()).build();
     when(stockMovementService.findById(id)).thenReturn(response);
 
     mockMvc
@@ -373,10 +426,14 @@ class ControllerMockMvcTest {
   @Test
   void stockMovement_create() throws Exception {
     var copyId = UUID.randomUUID();
-    var request = StockMovementRequest.builder()
-        .quantity(5).movementType(MovementTypeEnum.RESTOCK).copyId(copyId).build();
-    var response = StockMovementResponse.builder()
-        .id(UUID.randomUUID()).quantity(5).copyId(copyId).build();
+    var request =
+        StockMovementRequest.builder()
+            .quantity(5)
+            .movementType(MovementTypeEnum.RESTOCK)
+            .copyId(copyId)
+            .build();
+    var response =
+        StockMovementResponse.builder().id(UUID.randomUUID()).quantity(5).copyId(copyId).build();
     when(stockMovementService.create(any(StockMovementRequest.class))).thenReturn(response);
 
     mockMvc
@@ -395,9 +452,10 @@ class ControllerMockMvcTest {
 
   @Test
   void revenue_byGenre() throws Exception {
-    var response = List.of(
-        new RevenueByGenreResponse("Romance", new BigDecimal("1000")),
-        new RevenueByGenreResponse("Fantasy", new BigDecimal("500")));
+    var response =
+        List.of(
+            new RevenueByGenreResponse("Romance", new BigDecimal("1000")),
+            new RevenueByGenreResponse("Fantasy", new BigDecimal("500")));
     when(revenueService.getRevenueByGenre()).thenReturn(response);
 
     mockMvc
