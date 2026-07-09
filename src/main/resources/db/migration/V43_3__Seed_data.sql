@@ -143,18 +143,7 @@ INSERT INTO client (id, last_name, first_name, email, phone, address, city, post
 ('c1000001-0000-0000-0000-000000000010', 'Rossi', 'Maria', 'maria.rossi@email.com', '061234567', 'Via Roma 30', 'Rome', '00100', 'Italy', TRUE, '2024-08-14T15:45:00Z'),
 ('c1000001-0000-0000-0000-000000000011', 'Brown', 'Sarah', 'sarah.brown@email.com', '0777777777', '23 Queen Street', 'Edinburgh', 'EH1 3EN', 'United Kingdom', TRUE, '2024-09-01T12:00:00Z'),
 ('c1000001-0000-0000-0000-000000000012', 'Lefèvre', 'Pierre', 'pierre.lefevre@email.com', '0643210987', '3 Rue Victor Hugo', 'Toulouse', '31000', 'France', FALSE, '2024-09-15T11:00:00Z')
-ON CONFLICT (email) DO UPDATE SET
-  id = excluded.id,
-  last_name = excluded.last_name,
-  first_name = excluded.first_name,
-  email = excluded.email,
-  phone = excluded.phone,
-  address = excluded.address,
-  city = excluded.city,
-  postal_code = excluded.postal_code,
-  country = excluded.country,
-  active = excluded.active,
-  registration_date = excluded.registration_date;
+ON CONFLICT (email) DO NOTHING;
 
 -- ============================================================
 -- 8. COPY
@@ -180,16 +169,7 @@ INSERT INTO copy (id, isbn, format, price, page_count, publication_date, image_u
 ('c0a00001-0000-0000-0000-000000000018', '9782253000397', 'EBOOK', 4.99, 175, '1999-08-19', NULL, 'b0000001-0000-0000-0000-000000000012', 'e0000001-0000-0000-0000-000000000009'),
 ('c0a00001-0000-0000-0000-000000000019', '9782070409229', 'HARDCOVER', 29.99, 1488, '1862-01-01', NULL, 'b0000001-0000-0000-0000-000000000005', 'e0000001-0000-0000-0000-000000000004'),
 ('c0a00001-0000-0000-0000-000000000020', '9780451524936', 'EBOOK', 5.99, 328, '1949-06-08', NULL, 'b0000001-0000-0000-0000-000000000003', 'e0000001-0000-0000-0000-000000000003')
-ON CONFLICT (isbn) DO UPDATE SET
-  id = excluded.id,
-  isbn = excluded.isbn,
-  format = excluded.format,
-  price = excluded.price,
-  page_count = excluded.page_count,
-  publication_date = excluded.publication_date,
-  image_url = excluded.image_url,
-  book_id = excluded.book_id,
-  publisher_id = excluded.publisher_id;
+ON CONFLICT (isbn) DO NOTHING;
 
 -- ============================================================
 -- 9. ORDERS
