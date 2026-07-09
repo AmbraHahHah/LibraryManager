@@ -4,7 +4,7 @@
 -- ============================================================
 -- 1. AUTHOR
 -- ============================================================
-INSERT INTO author (id, name, first_name, biography, nationality, birth_date) VALUES
+INSERT INTO author (id, last_name, first_name, biography, nationality, birth_date) VALUES
 ('a0000001-0000-0000-0000-000000000001', 'Rowling', 'J.K.', 'British author best known for the Harry Potter series.', 'British', '1965-07-31'),
 ('a0000001-0000-0000-0000-000000000002', 'Tolkien', 'J.R.R.', 'English writer, poet, and philologist, author of The Lord of the Rings.', 'British', '1892-01-03'),
 ('a0000001-0000-0000-0000-000000000003', 'Orwell', 'George', 'English novelist and essayist, known for dystopian novels.', 'British', '1903-06-25'),
@@ -124,7 +124,7 @@ INSERT INTO editor (id, name, address, email, country) VALUES
 -- ============================================================
 -- 7. CLIENT
 -- ============================================================
-INSERT INTO client (id, name, first_name, email, phone, address, city, postal_code, country, active, registration_date) VALUES
+INSERT INTO client (id, last_name, first_name, email, phone, address, city, postal_code, country, active, registration_date) VALUES
 ('c1000001-0000-0000-0000-000000000001', 'Dupont', 'Jean', 'jean.dupont@email.com', '0612345678', '12 Rue de la Paix', 'Paris', '75001', 'France', TRUE, '2024-01-15T10:30:00Z'),
 ('c1000001-0000-0000-0000-000000000002', 'Martin', 'Sophie', 'sophie.martin@email.com', '0623456789', '45 Avenue des Champs', 'Lyon', '69001', 'France', TRUE, '2024-02-20T14:00:00Z'),
 ('c1000001-0000-0000-0000-000000000003', 'Smith', 'John', 'john.smith@email.com', '0754321098', '10 Downing Street', 'London', 'SW1A 2AA', 'United Kingdom', TRUE, '2024-03-10T09:15:00Z'),
