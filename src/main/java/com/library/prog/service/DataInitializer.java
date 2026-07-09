@@ -6,10 +6,10 @@ import java.nio.charset.StandardCharsets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,11 +17,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DataInitializer implements CommandLineRunner {
 
-  @Autowired
-  private JdbcTemplate jdbcTemplate;
+  @Autowired private JdbcTemplate jdbcTemplate;
 
-  @Autowired
-  private Environment env;
+  @Autowired private Environment env;
 
   @Override
   public void run(String... args) {
@@ -32,7 +30,8 @@ public class DataInitializer implements CommandLineRunner {
     log.info("Cleaning existing seed data...");
     cleanSeedData();
 
-    log.info("Loading seed data from {} (active profile: {})", seedFile, String.join(", ", profiles));
+    log.info(
+        "Loading seed data from {} (active profile: {})", seedFile, String.join(", ", profiles));
 
     try {
       var resource = new ClassPathResource(seedFile);
