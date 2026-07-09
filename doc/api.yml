@@ -68,114 +68,6 @@ paths:
                 example: OK
 
   ##############################################################################
-  # Authors
-  ##############################################################################
-  /authors:
-    get:
-      summary: Liste tous les auteurs
-      tags:
-        - Authors
-      operationId: listAuthors
-      responses:
-        "200":
-          description: Liste des auteurs
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/AuthorResponse"
-    post:
-      summary: Crée un auteur
-      tags:
-        - Authors
-      operationId: createAuthor
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AuthorRequest"
-      responses:
-        "201":
-          description: Auteur créé
-          headers:
-            Location:
-              schema:
-                type: string
-                format: uri
-              description: URI du nouvel auteur
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthorResponse"
-
-  /authors/{id}:
-    get:
-      summary: Détail d'un auteur
-      tags:
-        - Authors
-      operationId: getAuthor
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthorResponse"
-        "404":
-          description: Auteur non trouvé
-    put:
-      summary: Met à jour un auteur
-      tags:
-        - Authors
-      operationId: updateAuthor
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AuthorRequest"
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthorResponse"
-        "404":
-          description: Auteur non trouvé
-    delete:
-      summary: Supprime un auteur
-      tags:
-        - Authors
-      operationId: deleteAuthor
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "204":
-          description: Supprimé
-        "404":
-          description: Auteur non trouvé
-
-  ##############################################################################
   # Books
   ##############################################################################
   /books:
@@ -324,238 +216,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StockByEditionResponse"
-
-  ##############################################################################
-  # Categories
-  ##############################################################################
-  /categories:
-    get:
-      summary: Liste toutes les catégories
-      tags:
-        - Categories
-      operationId: listCategories
-      responses:
-        "200":
-          description: Liste des catégories
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/CategoryResponse"
-    post:
-      summary: Crée une catégorie
-      tags:
-        - Categories
-      operationId: createCategory
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CategoryRequest"
-      responses:
-        "201":
-          description: Catégorie créée
-          headers:
-            Location:
-              schema:
-                type: string
-                format: uri
-              description: URI de la nouvelle catégorie
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CategoryResponse"
-
-  /categories/roots:
-    get:
-      summary: Liste les catégories racines (sans parent)
-      tags:
-        - Categories
-      operationId: listRootCategories
-      responses:
-        "200":
-          description: Liste des catégories racines
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/CategoryResponse"
-
-  /categories/{id}:
-    get:
-      summary: Détail d'une catégorie
-      tags:
-        - Categories
-      operationId: getCategory
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CategoryResponse"
-        "404":
-          description: Catégorie non trouvée
-    put:
-      summary: Met à jour une catégorie
-      tags:
-        - Categories
-      operationId: updateCategory
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CategoryRequest"
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CategoryResponse"
-        "404":
-          description: Catégorie non trouvée
-    delete:
-      summary: Supprime une catégorie
-      tags:
-        - Categories
-      operationId: deleteCategory
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "204":
-          description: Supprimée
-        "404":
-          description: Catégorie non trouvée
-
-  ##############################################################################
-  # Clients
-  ##############################################################################
-  /clients:
-    get:
-      summary: Liste tous les clients
-      tags:
-        - Clients
-      operationId: listClients
-      responses:
-        "200":
-          description: Liste des clients
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ClientResponse"
-    post:
-      summary: Crée un client
-      tags:
-        - Clients
-      operationId: createClient
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ClientRequest"
-      responses:
-        "201":
-          description: Client créé
-          headers:
-            Location:
-              schema:
-                type: string
-                format: uri
-              description: URI du nouveau client
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ClientResponse"
-
-  /clients/{id}:
-    get:
-      summary: Détail d'un client
-      tags:
-        - Clients
-      operationId: getClient
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ClientResponse"
-        "404":
-          description: Client non trouvé
-    put:
-      summary: Met à jour un client
-      tags:
-        - Clients
-      operationId: updateClient
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ClientRequest"
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ClientResponse"
-        "404":
-          description: Client non trouvé
-    delete:
-      summary: Supprime un client
-      tags:
-        - Clients
-      operationId: deleteClient
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "204":
-          description: Supprimé
-        "404":
-          description: Client non trouvé
 
   ##############################################################################
   # Copies
@@ -816,114 +476,6 @@ paths:
           description: Supprimé
         "404":
           description: Éditeur non trouvé
-
-  ##############################################################################
-  # Reviews
-  ##############################################################################
-  /reviews:
-    get:
-      summary: Liste tous les avis
-      tags:
-        - Reviews
-      operationId: listReviews
-      responses:
-        "200":
-          description: Liste des avis
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ReviewResponse"
-    post:
-      summary: Crée un avis
-      tags:
-        - Reviews
-      operationId: createReview
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ReviewRequest"
-      responses:
-        "201":
-          description: Avis créé
-          headers:
-            Location:
-              schema:
-                type: string
-                format: uri
-              description: URI du nouvel avis
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ReviewResponse"
-
-  /reviews/{id}:
-    get:
-      summary: Détail d'un avis
-      tags:
-        - Reviews
-      operationId: getReview
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ReviewResponse"
-        "404":
-          description: Avis non trouvé
-    put:
-      summary: Met à jour un avis
-      tags:
-        - Reviews
-      operationId: updateReview
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ReviewRequest"
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ReviewResponse"
-        "404":
-          description: Avis non trouvé
-    delete:
-      summary: Supprime un avis
-      tags:
-        - Reviews
-      operationId: deleteReview
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "204":
-          description: Supprimé
-        "404":
-          description: Avis non trouvé
 
   ##############################################################################
   # Stock
@@ -1360,109 +912,6 @@ paths:
   ##############################################################################
   # Order Lines
   ##############################################################################
-  /order-lines:
-    get:
-      summary: Liste toutes les lignes de commande
-      tags:
-        - Order Lines
-      operationId: listOrderLines
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/OrderLineResponse"
-    post:
-      summary: Crée une ligne de commande
-      tags:
-        - Order Lines
-      operationId: createOrderLine
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/OrderLineRequest"
-      responses:
-        "201":
-          description: Ligne créée
-          headers:
-            Location:
-              schema:
-                type: string
-                format: uri
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OrderLineResponse"
-
-  /order-lines/{id}:
-    get:
-      summary: Détail d'une ligne de commande
-      tags:
-        - Order Lines
-      operationId: getOrderLine
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OrderLineResponse"
-        "404":
-          description: Ligne non trouvée
-    put:
-      summary: Met à jour une ligne de commande
-      tags:
-        - Order Lines
-      operationId: updateOrderLine
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/OrderLineRequest"
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OrderLineResponse"
-        "404":
-          description: Ligne non trouvée
-    delete:
-      summary: Supprime une ligne de commande
-      tags:
-        - Order Lines
-      operationId: deleteOrderLine
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "204":
-          description: Supprimée
-        "404":
-          description: Ligne non trouvée
-
   /order-lines/by-order:
     get:
       summary: Lignes d'une commande
@@ -1519,26 +968,6 @@ components:
     # ────────────────────────────────────────────────────────────────────────────
     # Requests
     # ────────────────────────────────────────────────────────────────────────────
-    AuthorRequest:
-      type: object
-      required:
-        - lastName
-      properties:
-        lastName:
-          type: string
-          maxLength: 100
-        firstName:
-          type: string
-          maxLength: 100
-        biography:
-          type: string
-        nationality:
-          type: string
-          maxLength: 100
-        birthDate:
-          type: string
-          format: date
-
     BookRequest:
       type: object
       required:
@@ -1554,58 +983,12 @@ components:
           maxLength: 50
           default: English
 
-    CategoryRequest:
-      type: object
-      required:
-        - name
-      properties:
-        name:
-          type: string
-          maxLength: 100
-        description:
-          type: string
-        parentId:
-          type: string
-          format: uuid
-          description: ID de la catégorie parente (null pour une catégorie racine)
-
-    ClientRequest:
-      type: object
-      required:
-        - lastName
-        - firstName
-        - email
-      properties:
-        lastName:
-          type: string
-          maxLength: 200
-        firstName:
-          type: string
-          maxLength: 200
-        email:
-          type: string
-          format: email
-          maxLength: 250
-        phone:
-          type: string
-          maxLength: 50
-        address:
-          type: string
-        city:
-          type: string
-          maxLength: 150
-        postalCode:
-          type: string
-          maxLength: 20
-        country:
-          type: string
-          maxLength: 100
-
     CopyRequest:
       type: object
       required:
         - isbn
         - format
+        - price
         - bookId
       properties:
         isbn:
@@ -1648,31 +1031,11 @@ components:
           type: string
           maxLength: 100
 
-    ReviewRequest:
-      type: object
-      required:
-        - bookId
-        - clientId
-        - rating
-      properties:
-        bookId:
-          type: string
-          format: uuid
-        clientId:
-          type: string
-          format: uuid
-        rating:
-          type: integer
-          minimum: 1
-          maximum: 5
-        comment:
-          type: string
-          maxLength: 2000
-
     StockRequest:
       type: object
       required:
         - copyId
+        - alertThreshold
       properties:
         copyId:
           type: string
@@ -1743,51 +1106,16 @@ components:
         - copyId
         - quantity
       properties:
-        orderId:
-          type: string
-          format: uuid
-          description: ID de la commande (optionnel dans une création groupée)
         copyId:
           type: string
           format: uuid
         quantity:
           type: integer
           minimum: 1
-        unitPrice:
-          type: number
-          format: decimal
-          minimum: 0
-          description: Prix unitaire (défaut = prix de l'exemplaire)
-        discount:
-          type: number
-          format: decimal
-          minimum: 0
-          default: 0
 
     # ────────────────────────────────────────────────────────────────────────────
     # Responses
     # ────────────────────────────────────────────────────────────────────────────
-    AuthorResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        lastName:
-          type: string
-        firstName:
-          type: string
-        biography:
-          type: string
-        nationality:
-          type: string
-        birthDate:
-          type: string
-          format: date
-      required:
-        - id
-        - lastName
-
     BookResponse:
       type: object
       properties:
@@ -1808,97 +1136,6 @@ components:
         - title
         - language
         - createdAt
-
-    BookStockResponse:
-      type: object
-      properties:
-        totalCopies:
-          type: integer
-          format: int64
-        totalAvailableStock:
-          type: integer
-        totalReservedQuantity:
-          type: integer
-        outOfStock:
-          type: boolean
-      required:
-        - totalCopies
-        - totalAvailableStock
-        - totalReservedQuantity
-        - outOfStock
-
-    CategoryResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        description:
-          type: string
-        parentId:
-          type: string
-          format: uuid
-          nullable: true
-        parentName:
-          type: string
-          nullable: true
-        subCategories:
-          type: array
-          items:
-            $ref: "#/components/schemas/CategoryChildResponse"
-      required:
-        - id
-        - name
-        - subCategories
-
-    CategoryChildResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-      required:
-        - id
-        - name
-
-    ClientResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        lastName:
-          type: string
-        firstName:
-          type: string
-        email:
-          type: string
-        phone:
-          type: string
-        address:
-          type: string
-        city:
-          type: string
-        postalCode:
-          type: string
-        country:
-          type: string
-        active:
-          type: boolean
-        registrationDate:
-          type: string
-          format: date-time
-      required:
-        - id
-        - lastName
-        - firstName
-        - email
-        - active
-        - registrationDate
 
     CopyResponse:
       type: object
@@ -1953,35 +1190,6 @@ components:
       required:
         - id
         - name
-
-    ReviewResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        bookId:
-          type: string
-          format: uuid
-        clientId:
-          type: string
-          format: uuid
-        rating:
-          type: integer
-        comment:
-          type: string
-        valid:
-          type: boolean
-        createdAt:
-          type: string
-          format: date-time
-      required:
-        - id
-        - bookId
-        - clientId
-        - rating
-        - valid
-        - createdAt
 
     StockResponse:
       type: object
@@ -2058,6 +1266,24 @@ components:
       required:
         - genre
         - revenue
+
+    BookStockResponse:
+      type: object
+      properties:
+        totalCopies:
+          type: integer
+          format: int64
+        totalAvailableStock:
+          type: integer
+        totalReservedQuantity:
+          type: integer
+        outOfStock:
+          type: boolean
+      required:
+        - totalCopies
+        - totalAvailableStock
+        - totalReservedQuantity
+        - outOfStock
 
     StockByEditionResponse:
       type: object

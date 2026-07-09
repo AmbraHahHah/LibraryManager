@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class StockService {
 
-  public static final int DEFAULT_LOW_STOCK_THRESHOLD = 3;
   private final StockRepository stockRepository;
   private final StockMovementRepository stockMovementRepository;
   private final CopyRepository copyRepository;
@@ -38,11 +37,6 @@ public class StockService {
         .findById(id)
         .map(this::toResponse)
         .orElseThrow(() -> new EntityNotFoundException("Stock not found: " + id));
-  }
-
-  public List<StockResponse> getLowStock(Integer threshold) {
-    int effectiveThreshold = threshold != null ? threshold : DEFAULT_LOW_STOCK_THRESHOLD;
-    return stockRepository.findLowStock(effectiveThreshold).stream().map(this::toResponse).toList();
   }
 
   public StockResponse findByCopyId(UUID copyId) {

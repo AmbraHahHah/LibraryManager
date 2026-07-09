@@ -51,8 +51,7 @@ class OrderControllerTest extends FacadeIT {
     clientId = client.getId();
 
     var bookRes =
-        rest.postForEntity(
-                "/books", BookRequest.builder().title("Test Book").build(), BookResponse.class)
+        rest.postForEntity("/books", BookRequest.builder().title("Test Book").build(), BookResponse.class)
             .getBody();
 
     var copyReq =
@@ -62,13 +61,13 @@ class OrderControllerTest extends FacadeIT {
             .price(new BigDecimal("12.99"))
             .bookId(bookRes.id())
             .build();
-    var copyRes = rest.postForEntity("/copies", copyReq, CopyResponse.class).getBody();
+    var copyRes =
+        rest.postForEntity("/copies", copyReq, CopyResponse.class).getBody();
     copyId = copyRes.id();
 
     var stockRes =
         rest.postForEntity(
-                "/stocks",
-                StockRequest.builder().copyId(copyId).alertThreshold(5).build(),
+                "/stocks", StockRequest.builder().copyId(copyId).alertThreshold(5).build(),
                 StockResponse.class)
             .getBody();
     stockId = stockRes.id();
@@ -93,7 +92,8 @@ class OrderControllerTest extends FacadeIT {
             .lines(List.of(lineReq))
             .build();
 
-    var response = rest.postForEntity("/orders", request, OrderResponse.class);
+    var response =
+        rest.postForEntity("/orders", request, OrderResponse.class);
 
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
     assertNotNull(response.getBody());
@@ -108,9 +108,14 @@ class OrderControllerTest extends FacadeIT {
   @Test
   void create_order_returns_400_when_insufficient_stock() {
     var lineReq = OrderLineRequest.builder().copyId(copyId).quantity(999).build();
-    var request = OrderRequest.builder().clientId(clientId).lines(List.of(lineReq)).build();
+    var request =
+        OrderRequest.builder()
+            .clientId(clientId)
+            .lines(List.of(lineReq))
+            .build();
 
-    var response = rest.postForEntity("/orders", request, String.class);
+    var response =
+        rest.postForEntity("/orders", request, String.class);
 
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
   }
@@ -118,8 +123,10 @@ class OrderControllerTest extends FacadeIT {
   @Test
   void find_order_by_id() {
     var lineReq = OrderLineRequest.builder().copyId(copyId).quantity(2).build();
-    var createReq = OrderRequest.builder().clientId(clientId).lines(List.of(lineReq)).build();
-    var created = rest.postForEntity("/orders", createReq, OrderResponse.class).getBody();
+    var createReq =
+        OrderRequest.builder().clientId(clientId).lines(List.of(lineReq)).build();
+    var created =
+        rest.postForEntity("/orders", createReq, OrderResponse.class).getBody();
 
     var response = rest.getForEntity("/orders/" + created.id(), OrderResponse.class);
 
@@ -130,7 +137,8 @@ class OrderControllerTest extends FacadeIT {
   @Test
   void list_all_orders() {
     var lineReq = OrderLineRequest.builder().copyId(copyId).quantity(1).build();
-    var createReq = OrderRequest.builder().clientId(clientId).lines(List.of(lineReq)).build();
+    var createReq =
+        OrderRequest.builder().clientId(clientId).lines(List.of(lineReq)).build();
     rest.postForEntity("/orders", createReq, OrderResponse.class);
 
     var response = rest.getForEntity("/orders", OrderResponse[].class);
@@ -142,8 +150,10 @@ class OrderControllerTest extends FacadeIT {
   @Test
   void confirm_order_reduces_stock() {
     var lineReq = OrderLineRequest.builder().copyId(copyId).quantity(4).build();
-    var createReq = OrderRequest.builder().clientId(clientId).lines(List.of(lineReq)).build();
-    var created = rest.postForEntity("/orders", createReq, OrderResponse.class).getBody();
+    var createReq =
+        OrderRequest.builder().clientId(clientId).lines(List.of(lineReq)).build();
+    var created =
+        rest.postForEntity("/orders", createReq, OrderResponse.class).getBody();
 
     var response =
         rest.patchForObject("/orders/" + created.id() + "/confirm", null, OrderResponse.class);
@@ -158,8 +168,10 @@ class OrderControllerTest extends FacadeIT {
   @Test
   void cancel_pending_order_releases_reserved_stock() {
     var lineReq = OrderLineRequest.builder().copyId(copyId).quantity(3).build();
-    var createReq = OrderRequest.builder().clientId(clientId).lines(List.of(lineReq)).build();
-    var created = rest.postForEntity("/orders", createReq, OrderResponse.class).getBody();
+    var createReq =
+        OrderRequest.builder().clientId(clientId).lines(List.of(lineReq)).build();
+    var created =
+        rest.postForEntity("/orders", createReq, OrderResponse.class).getBody();
 
     rest.delete("/orders/" + created.id());
 
@@ -171,8 +183,10 @@ class OrderControllerTest extends FacadeIT {
   @Test
   void cancel_order_returns_204() {
     var lineReq = OrderLineRequest.builder().copyId(copyId).quantity(1).build();
-    var createReq = OrderRequest.builder().clientId(clientId).lines(List.of(lineReq)).build();
-    var created = rest.postForEntity("/orders", createReq, OrderResponse.class).getBody();
+    var createReq =
+        OrderRequest.builder().clientId(clientId).lines(List.of(lineReq)).build();
+    var created =
+        rest.postForEntity("/orders", createReq, OrderResponse.class).getBody();
 
     rest.delete("/orders/" + created.id() + "/cancel");
 

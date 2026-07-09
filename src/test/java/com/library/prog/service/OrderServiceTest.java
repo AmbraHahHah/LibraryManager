@@ -89,7 +89,8 @@ class OrderServiceTest {
               if (o.getId() == null) o.setId(UUID.randomUUID());
               return o;
             });
-    when(orderLineRepository.save(any(OrderLine.class))).thenAnswer(inv -> inv.getArgument(0));
+    when(orderLineRepository.save(any(OrderLine.class)))
+        .thenAnswer(inv -> inv.getArgument(0));
     when(stockRepository.save(any(Stock.class))).thenAnswer(inv -> inv.getArgument(0));
 
     var result = orderService.create(request);
@@ -109,8 +110,7 @@ class OrderServiceTest {
     var request =
         OrderRequest.builder()
             .clientId(clientId)
-            .lines(
-                List.of(OrderLineRequest.builder().copyId(UUID.randomUUID()).quantity(1).build()))
+            .lines(List.of(OrderLineRequest.builder().copyId(UUID.randomUUID()).quantity(1).build()))
             .build();
 
     when(clientRepository.findById(clientId)).thenReturn(Optional.empty());

@@ -45,11 +45,6 @@ public class StockController {
     return stockService.findByCopyId(copyId);
   }
 
-  @GetMapping("/low-stock")
-  public List<StockResponse> getLowStock(@RequestParam(required = false) Integer threshold) {
-    return stockService.getLowStock(threshold);
-  }
-
   @PostMapping
   public ResponseEntity<StockResponse> create(@Valid @RequestBody StockRequest request) {
     var response = stockService.create(request);

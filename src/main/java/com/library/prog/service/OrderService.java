@@ -225,7 +225,10 @@ public class OrderService {
   }
 
   private OrderResponse toResponseWithLines(Order order) {
-    var lines = order.getOrderLines().stream().map(this::toLineResponse).toList();
+    var lines =
+        order.getOrderLines().stream()
+            .map(this::toLineResponse)
+            .toList();
     return toResponse(order, order.getOrderLines());
   }
 
