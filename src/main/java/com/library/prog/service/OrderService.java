@@ -236,7 +236,7 @@ public class OrderService {
     return OrderResponse.builder()
         .id(order.getId())
         .clientId(order.getCustomer().getId())
-        .clientName(order.getCustomer().getName())
+        .clientName(order.getCustomer().getLastName())
         .status(order.getStatus())
         .totalAmount(order.getTotalAmount())
         .shippingFee(order.getShippingFee())

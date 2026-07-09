@@ -44,7 +44,7 @@ class OrderControllerTest extends FacadeIT {
     var client =
         clientRepository.save(
             Client.builder()
-                .name("Dupont")
+                .lastName("Dupont")
                 .firstName("Jean")
                 .email("jean.dupont@test.com")
                 .build());

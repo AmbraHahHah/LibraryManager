@@ -322,7 +322,7 @@ class OrderServiceTest {
   private Client buildClient() {
     return Client.builder()
         .id(UUID.randomUUID())
-        .name("Dupont")
+        .lastName("Dupont")
         .firstName("Jean")
         .email("jean@test.com")
         .build();
