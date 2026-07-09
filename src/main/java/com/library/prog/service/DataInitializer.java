@@ -29,6 +29,9 @@ public class DataInitializer implements CommandLineRunner {
     boolean isProd = profiles.length > 0 && "prod".equals(profiles[0]);
     var seedFile = isProd ? "db/seed/seed-prod.sql" : "db/seed/seed-preprod.sql";
 
+    log.info("Cleaning existing seed data...");
+    cleanSeedData();
+
     log.info("Loading seed data from {} (active profile: {})", seedFile, String.join(", ", profiles));
 
     try {
@@ -39,5 +42,21 @@ public class DataInitializer implements CommandLineRunner {
     } catch (IOException e) {
       throw new UncheckedIOException("Failed to load seed file: " + seedFile, e);
     }
+  }
+
+  private void cleanSeedData() {
+    jdbcTemplate.execute("DELETE FROM stock_movement");
+    jdbcTemplate.execute("DELETE FROM order_line");
+    jdbcTemplate.execute("DELETE FROM stock");
+    jdbcTemplate.execute("DELETE FROM orders");
+    jdbcTemplate.execute("DELETE FROM review");
+    jdbcTemplate.execute("DELETE FROM copy");
+    jdbcTemplate.execute("DELETE FROM book_category");
+    jdbcTemplate.execute("DELETE FROM book_author");
+    jdbcTemplate.execute("DELETE FROM book");
+    jdbcTemplate.execute("DELETE FROM category");
+    jdbcTemplate.execute("DELETE FROM author");
+    jdbcTemplate.execute("DELETE FROM editor");
+    jdbcTemplate.execute("DELETE FROM client");
   }
 }
