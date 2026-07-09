@@ -48,8 +48,10 @@ class AuthorControllerTest extends FacadeIT {
 
   @Test
   void list_all_authors() {
-    rest.postForEntity("/authors", AuthorRequest.builder().lastName("Hugo").build(), AuthorResponse.class);
-    rest.postForEntity("/authors", AuthorRequest.builder().lastName("Zola").build(), AuthorResponse.class);
+    rest.postForEntity(
+        "/authors", AuthorRequest.builder().lastName("Hugo").build(), AuthorResponse.class);
+    rest.postForEntity(
+        "/authors", AuthorRequest.builder().lastName("Zola").build(), AuthorResponse.class);
 
     var response = rest.getForEntity("/authors", AuthorResponse[].class);
 
@@ -63,11 +65,7 @@ class AuthorControllerTest extends FacadeIT {
         rest.postForEntity(
             "/authors", AuthorRequest.builder().lastName("Original").build(), AuthorResponse.class);
     var updateRequest =
-        AuthorRequest.builder()
-            .lastName("Updated")
-            .firstName("New")
-            .nationality("UK")
-            .build();
+        AuthorRequest.builder().lastName("Updated").firstName("New").nationality("UK").build();
 
     rest.put("/authors/" + created.getBody().id(), updateRequest);
     var updated = rest.getForEntity("/authors/" + created.getBody().id(), AuthorResponse.class);
@@ -81,7 +79,9 @@ class AuthorControllerTest extends FacadeIT {
   void delete_author() {
     var created =
         rest.postForEntity(
-            "/authors", AuthorRequest.builder().lastName("To Delete").build(), AuthorResponse.class);
+            "/authors",
+            AuthorRequest.builder().lastName("To Delete").build(),
+            AuthorResponse.class);
     var id = created.getBody().id();
 
     rest.delete("/authors/" + id);

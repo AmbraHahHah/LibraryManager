@@ -36,8 +36,7 @@ class OrderLineControllerTest extends FacadeIT {
             .format(com.library.prog.model.FormatEnum.PAPERBACK)
             .bookId(book.getBody().id())
             .build();
-    var copy =
-        rest.postForEntity("/copies", copyRequest, CopyResponse.class);
+    var copy = rest.postForEntity("/copies", copyRequest, CopyResponse.class);
     copyId = copy.getBody().id();
 
     var client =
@@ -53,22 +52,16 @@ class OrderLineControllerTest extends FacadeIT {
     var orderRequest =
         OrderRequest.builder()
             .clientId(client.getBody().id())
-            .lines(
-                List.of(
-                    OrderLineRequest.builder()
-                        .copyId(copyId)
-                        .quantity(1)
-                        .build()))
+            .lines(List.of(OrderLineRequest.builder().copyId(copyId).quantity(1).build()))
             .build();
-    var order =
-        rest.postForEntity("/orders", orderRequest, OrderResponse.class);
+    var order = rest.postForEntity("/orders", orderRequest, OrderResponse.class);
     orderId = order.getBody().id();
   }
 
   @Test
   void find_by_order_id() {
-    var response = rest.getForEntity(
-        "/order-lines/by-order?orderId=" + orderId, OrderLineResponse[].class);
+    var response =
+        rest.getForEntity("/order-lines/by-order?orderId=" + orderId, OrderLineResponse[].class);
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertTrue(response.getBody().length >= 1);
@@ -105,8 +98,7 @@ class OrderLineControllerTest extends FacadeIT {
   @Test
   void delete_line() {
     var lines =
-        rest.getForEntity(
-            "/order-lines/by-order?orderId=" + orderId, OrderLineResponse[].class);
+        rest.getForEntity("/order-lines/by-order?orderId=" + orderId, OrderLineResponse[].class);
     var lineId = lines.getBody()[0].id();
 
     rest.delete("/order-lines/" + lineId);

@@ -47,7 +47,9 @@ public class CategoryService {
           categoryRepository
               .findById(request.parentId())
               .orElseThrow(
-                  () -> new EntityNotFoundException("Parent category not found: " + request.parentId()));
+                  () ->
+                      new EntityNotFoundException(
+                          "Parent category not found: " + request.parentId()));
     }
 
     var category =
@@ -72,7 +74,9 @@ public class CategoryService {
           categoryRepository
               .findById(request.parentId())
               .orElseThrow(
-                  () -> new EntityNotFoundException("Parent category not found: " + request.parentId()));
+                  () ->
+                      new EntityNotFoundException(
+                          "Parent category not found: " + request.parentId()));
     }
 
     category.setName(request.name());

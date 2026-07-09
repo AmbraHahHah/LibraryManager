@@ -115,11 +115,7 @@ class ClientServiceTest {
   void update_modifies_existing_client() {
     var existing = buildClient("Old");
     var request =
-        ClientRequest.builder()
-            .lastName("Updated")
-            .firstName("New")
-            .email("new@test.com")
-            .build();
+        ClientRequest.builder().lastName("Updated").firstName("New").email("new@test.com").build();
     when(clientRepository.findById(existing.getId())).thenReturn(Optional.of(existing));
     when(clientRepository.save(any(Client.class)))
         .thenAnswer(invocation -> invocation.getArgument(0));

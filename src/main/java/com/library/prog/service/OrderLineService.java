@@ -50,8 +50,7 @@ public class OrderLineService {
     var copy =
         copyRepository
             .findById(request.copyId())
-            .orElseThrow(
-                () -> new EntityNotFoundException("Copy not found: " + request.copyId()));
+            .orElseThrow(() -> new EntityNotFoundException("Copy not found: " + request.copyId()));
 
     var line =
         OrderLine.builder()
@@ -78,8 +77,7 @@ public class OrderLineService {
     var copy =
         copyRepository
             .findById(request.copyId())
-            .orElseThrow(
-                () -> new EntityNotFoundException("Copy not found: " + request.copyId()));
+            .orElseThrow(() -> new EntityNotFoundException("Copy not found: " + request.copyId()));
 
     line.setOrder(order);
     line.setCopy(copy);

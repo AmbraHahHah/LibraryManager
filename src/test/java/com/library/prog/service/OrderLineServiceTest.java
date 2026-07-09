@@ -112,11 +112,7 @@ class OrderLineServiceTest {
     var copy = buildCopy();
     copy.setPrice(BigDecimal.valueOf(20));
     var request =
-        OrderLineRequest.builder()
-            .orderId(order.getId())
-            .copyId(copy.getId())
-            .quantity(1)
-            .build();
+        OrderLineRequest.builder().orderId(order.getId()).copyId(copy.getId()).quantity(1).build();
     when(orderRepository.findById(order.getId())).thenReturn(Optional.of(order));
     when(copyRepository.findById(copy.getId())).thenReturn(Optional.of(copy));
     when(orderLineRepository.save(any(OrderLine.class)))
@@ -132,11 +128,7 @@ class OrderLineServiceTest {
   void create_throws_when_order_not_found() {
     var orderId = UUID.randomUUID();
     var request =
-        OrderLineRequest.builder()
-            .orderId(orderId)
-            .copyId(UUID.randomUUID())
-            .quantity(1)
-            .build();
+        OrderLineRequest.builder().orderId(orderId).copyId(UUID.randomUUID()).quantity(1).build();
     when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
 
     assertThrows(EntityNotFoundException.class, () -> orderLineService.create(request));
@@ -147,11 +139,7 @@ class OrderLineServiceTest {
     var order = buildOrder();
     var copyId = UUID.randomUUID();
     var request =
-        OrderLineRequest.builder()
-            .orderId(order.getId())
-            .copyId(copyId)
-            .quantity(1)
-            .build();
+        OrderLineRequest.builder().orderId(order.getId()).copyId(copyId).quantity(1).build();
     when(orderRepository.findById(order.getId())).thenReturn(Optional.of(order));
     when(copyRepository.findById(copyId)).thenReturn(Optional.empty());
 

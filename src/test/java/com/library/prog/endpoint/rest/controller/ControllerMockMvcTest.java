@@ -542,7 +542,9 @@ class ControllerMockMvcTest {
     var response = CategoryResponse.builder().id(UUID.randomUUID()).name("Fiction").build();
     when(categoryService.findAll()).thenReturn(List.of(response));
 
-    mockMvc.perform(get("/categories")).andExpect(status().isOk())
+    mockMvc
+        .perform(get("/categories"))
+        .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].name").value("Fiction"));
   }
 
@@ -552,7 +554,9 @@ class ControllerMockMvcTest {
     var response = CategoryResponse.builder().id(id).name("Found").build();
     when(categoryService.findById(id)).thenReturn(response);
 
-    mockMvc.perform(get("/categories/" + id)).andExpect(status().isOk())
+    mockMvc
+        .perform(get("/categories/" + id))
+        .andExpect(status().isOk())
         .andExpect(jsonPath("$.name").value("Found"));
   }
 
@@ -561,7 +565,9 @@ class ControllerMockMvcTest {
     var response = CategoryResponse.builder().id(UUID.randomUUID()).name("Root").build();
     when(categoryService.findRootCategories()).thenReturn(List.of(response));
 
-    mockMvc.perform(get("/categories/roots")).andExpect(status().isOk())
+    mockMvc
+        .perform(get("/categories/roots"))
+        .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].name").value("Root"));
   }
 
@@ -607,7 +613,9 @@ class ControllerMockMvcTest {
     var response = ClientResponse.builder().id(UUID.randomUUID()).lastName("Doe").build();
     when(clientService.findAll()).thenReturn(List.of(response));
 
-    mockMvc.perform(get("/clients")).andExpect(status().isOk())
+    mockMvc
+        .perform(get("/clients"))
+        .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].lastName").value("Doe"));
   }
 
@@ -617,13 +625,16 @@ class ControllerMockMvcTest {
     var response = ClientResponse.builder().id(id).lastName("Found").build();
     when(clientService.findById(id)).thenReturn(response);
 
-    mockMvc.perform(get("/clients/" + id)).andExpect(status().isOk())
+    mockMvc
+        .perform(get("/clients/" + id))
+        .andExpect(status().isOk())
         .andExpect(jsonPath("$.lastName").value("Found"));
   }
 
   @Test
   void client_create() throws Exception {
-    var request = ClientRequest.builder().lastName("Doe").firstName("John").email("john@test.com").build();
+    var request =
+        ClientRequest.builder().lastName("Doe").firstName("John").email("john@test.com").build();
     var response = ClientResponse.builder().id(UUID.randomUUID()).lastName("Doe").build();
     when(clientService.create(any(ClientRequest.class))).thenReturn(response);
 
@@ -639,7 +650,8 @@ class ControllerMockMvcTest {
   @Test
   void client_update() throws Exception {
     var id = UUID.randomUUID();
-    var request = ClientRequest.builder().lastName("Updated").firstName("New").email("new@test.com").build();
+    var request =
+        ClientRequest.builder().lastName("Updated").firstName("New").email("new@test.com").build();
     var response = ClientResponse.builder().id(id).lastName("Updated").build();
     when(clientService.update(any(UUID.class), any(ClientRequest.class))).thenReturn(response);
 
@@ -663,7 +675,9 @@ class ControllerMockMvcTest {
     var response = ReviewResponse.builder().id(UUID.randomUUID()).rating(4).build();
     when(reviewService.findAll()).thenReturn(List.of(response));
 
-    mockMvc.perform(get("/reviews")).andExpect(status().isOk())
+    mockMvc
+        .perform(get("/reviews"))
+        .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].rating").value(4));
   }
 
@@ -673,7 +687,9 @@ class ControllerMockMvcTest {
     var response = ReviewResponse.builder().id(id).rating(5).build();
     when(reviewService.findById(id)).thenReturn(response);
 
-    mockMvc.perform(get("/reviews/" + id)).andExpect(status().isOk())
+    mockMvc
+        .perform(get("/reviews/" + id))
+        .andExpect(status().isOk())
         .andExpect(jsonPath("$.rating").value(5));
   }
 
@@ -719,7 +735,9 @@ class ControllerMockMvcTest {
     var response = OrderLineResponse.builder().id(UUID.randomUUID()).quantity(3).build();
     when(orderLineService.findAll()).thenReturn(List.of(response));
 
-    mockMvc.perform(get("/order-lines")).andExpect(status().isOk())
+    mockMvc
+        .perform(get("/order-lines"))
+        .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].quantity").value(3));
   }
 
@@ -729,7 +747,9 @@ class ControllerMockMvcTest {
     var response = OrderLineResponse.builder().id(id).quantity(5).build();
     when(orderLineService.findById(id)).thenReturn(response);
 
-    mockMvc.perform(get("/order-lines/" + id)).andExpect(status().isOk())
+    mockMvc
+        .perform(get("/order-lines/" + id))
+        .andExpect(status().isOk())
         .andExpect(jsonPath("$.quantity").value(5));
   }
 
@@ -744,7 +764,9 @@ class ControllerMockMvcTest {
 
   @Test
   void orderLine_create() throws Exception {
-    var request = new OrderLineRequest(UUID.randomUUID(), UUID.randomUUID(), 2, BigDecimal.TEN, BigDecimal.ZERO);
+    var request =
+        new OrderLineRequest(
+            UUID.randomUUID(), UUID.randomUUID(), 2, BigDecimal.TEN, BigDecimal.ZERO);
     var response = OrderLineResponse.builder().id(UUID.randomUUID()).quantity(2).build();
     when(orderLineService.create(any(OrderLineRequest.class))).thenReturn(response);
 
@@ -759,9 +781,12 @@ class ControllerMockMvcTest {
   @Test
   void orderLine_update() throws Exception {
     var id = UUID.randomUUID();
-    var request = new OrderLineRequest(UUID.randomUUID(), UUID.randomUUID(), 5, BigDecimal.valueOf(20), BigDecimal.ZERO);
+    var request =
+        new OrderLineRequest(
+            UUID.randomUUID(), UUID.randomUUID(), 5, BigDecimal.valueOf(20), BigDecimal.ZERO);
     var response = OrderLineResponse.builder().id(id).quantity(5).build();
-    when(orderLineService.update(any(UUID.class), any(OrderLineRequest.class))).thenReturn(response);
+    when(orderLineService.update(any(UUID.class), any(OrderLineRequest.class)))
+        .thenReturn(response);
 
     mockMvc
         .perform(
@@ -780,7 +805,8 @@ class ControllerMockMvcTest {
 
   @Test
   void order_findAll() throws Exception {
-    var response = OrderResponse.builder().id(UUID.randomUUID()).status(OrderStatusEnum.PENDING).build();
+    var response =
+        OrderResponse.builder().id(UUID.randomUUID()).status(OrderStatusEnum.PENDING).build();
     when(orderService.findAll()).thenReturn(List.of(response));
 
     mockMvc.perform(get("/orders")).andExpect(status().isOk());
@@ -792,18 +818,22 @@ class ControllerMockMvcTest {
     var response = OrderResponse.builder().id(id).status(OrderStatusEnum.PENDING).build();
     when(orderService.findById(id)).thenReturn(response);
 
-    mockMvc.perform(get("/orders/" + id)).andExpect(status().isOk())
+    mockMvc
+        .perform(get("/orders/" + id))
+        .andExpect(status().isOk())
         .andExpect(jsonPath("$.status").value("PENDING"));
   }
 
   @Test
   void order_create() throws Exception {
-    var request = OrderRequest.builder()
-        .clientId(UUID.randomUUID())
-        .lines(List.of(
-            OrderLineRequest.builder().copyId(UUID.randomUUID()).quantity(1).build()
-        )).build();
-    var response = OrderResponse.builder().id(UUID.randomUUID()).status(OrderStatusEnum.PENDING).build();
+    var request =
+        OrderRequest.builder()
+            .clientId(UUID.randomUUID())
+            .lines(
+                List.of(OrderLineRequest.builder().copyId(UUID.randomUUID()).quantity(1).build()))
+            .build();
+    var response =
+        OrderResponse.builder().id(UUID.randomUUID()).status(OrderStatusEnum.PENDING).build();
     when(orderService.create(any(OrderRequest.class))).thenReturn(response);
 
     mockMvc
@@ -821,7 +851,8 @@ class ControllerMockMvcTest {
     var response = OrderResponse.builder().id(id).status(OrderStatusEnum.CONFIRMED).build();
     when(orderService.confirm(id)).thenReturn(response);
 
-    mockMvc.perform(patch("/orders/" + id + "/confirm"))
+    mockMvc
+        .perform(patch("/orders/" + id + "/confirm"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.status").value("CONFIRMED"));
   }
@@ -829,8 +860,7 @@ class ControllerMockMvcTest {
   @Test
   void order_cancel() throws Exception {
     var id = UUID.randomUUID();
-    mockMvc.perform(patch("/orders/" + id + "/cancel"))
-        .andExpect(status().isNoContent());
+    mockMvc.perform(patch("/orders/" + id + "/cancel")).andExpect(status().isNoContent());
   }
 
   @Test

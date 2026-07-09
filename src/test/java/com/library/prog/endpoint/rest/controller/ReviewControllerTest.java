@@ -91,7 +91,12 @@ class ReviewControllerTest extends FacadeIT {
     var created =
         rest.postForEntity(
             "/reviews",
-            ReviewRequest.builder().bookId(bookId).clientId(clientId).rating(3).comment("Okay").build(),
+            ReviewRequest.builder()
+                .bookId(bookId)
+                .clientId(clientId)
+                .rating(3)
+                .comment("Okay")
+                .build(),
             ReviewResponse.class);
     var updateRequest =
         ReviewRequest.builder()
@@ -125,8 +130,7 @@ class ReviewControllerTest extends FacadeIT {
 
   @Test
   void return_400_when_rating_is_invalid() {
-    var request =
-        ReviewRequest.builder().bookId(bookId).clientId(clientId).rating(6).build();
+    var request = ReviewRequest.builder().bookId(bookId).clientId(clientId).rating(6).build();
 
     var response = rest.postForEntity("/reviews", request, String.class);
 
@@ -135,8 +139,7 @@ class ReviewControllerTest extends FacadeIT {
 
   @Test
   void return_400_when_bookId_is_null() {
-    var request =
-        ReviewRequest.builder().clientId(clientId).rating(4).build();
+    var request = ReviewRequest.builder().clientId(clientId).rating(4).build();
 
     var response = rest.postForEntity("/reviews", request, String.class);
 

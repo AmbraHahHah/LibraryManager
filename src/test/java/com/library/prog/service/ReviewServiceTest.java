@@ -97,8 +97,7 @@ class ReviewServiceTest {
   void create_throws_when_client_not_found() {
     var book = buildBook();
     var clientId = UUID.randomUUID();
-    var request =
-        ReviewRequest.builder().bookId(book.getId()).clientId(clientId).rating(3).build();
+    var request = ReviewRequest.builder().bookId(book.getId()).clientId(clientId).rating(3).build();
     when(bookRepository.findById(book.getId())).thenReturn(Optional.of(book));
     when(clientRepository.findById(clientId)).thenReturn(Optional.empty());
 
@@ -135,7 +134,11 @@ class ReviewServiceTest {
   void update_throws_when_not_found() {
     var id = UUID.randomUUID();
     var request =
-        ReviewRequest.builder().bookId(UUID.randomUUID()).clientId(UUID.randomUUID()).rating(3).build();
+        ReviewRequest.builder()
+            .bookId(UUID.randomUUID())
+            .clientId(UUID.randomUUID())
+            .rating(3)
+            .build();
     when(reviewRepository.findById(id)).thenReturn(Optional.empty());
 
     assertThrows(EntityNotFoundException.class, () -> reviewService.update(id, request));

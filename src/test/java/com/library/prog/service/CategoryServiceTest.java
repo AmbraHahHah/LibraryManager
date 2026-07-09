@@ -69,7 +69,8 @@ class CategoryServiceTest {
 
   @Test
   void create_saves_and_returns_category() {
-    var request = CategoryRequest.builder().name("Science-Fiction").description("Sci-fi books").build();
+    var request =
+        CategoryRequest.builder().name("Science-Fiction").description("Sci-fi books").build();
     var saved = buildCategory("Science-Fiction");
     saved.setDescription("Sci-fi books");
     when(categoryRepository.save(any(Category.class))).thenReturn(saved);

@@ -7,6 +7,4 @@ import lombok.Builder;
 
 @Builder
 public record CategoryRequest(
-    @NotBlank @Size(max = 100) String name,
-    String description,
-    UUID parentId) {}
+    @NotBlank @Size(max = 100) String name, String description, UUID parentId) {}

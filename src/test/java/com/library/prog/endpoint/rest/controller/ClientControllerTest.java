@@ -57,10 +57,12 @@ class ClientControllerTest extends FacadeIT {
 
   @Test
   void list_all_clients() {
-    rest.postForEntity("/clients",
+    rest.postForEntity(
+        "/clients",
         ClientRequest.builder().lastName("Doe").firstName("John").email("john@test.com").build(),
         ClientResponse.class);
-    rest.postForEntity("/clients",
+    rest.postForEntity(
+        "/clients",
         ClientRequest.builder().lastName("Smith").firstName("Jane").email("jane@test.com").build(),
         ClientResponse.class);
 
@@ -73,15 +75,16 @@ class ClientControllerTest extends FacadeIT {
   @Test
   void update_client() {
     var created =
-        rest.postForEntity("/clients",
-            ClientRequest.builder().lastName("Original").firstName("User").email("orig@test.com").build(),
+        rest.postForEntity(
+            "/clients",
+            ClientRequest.builder()
+                .lastName("Original")
+                .firstName("User")
+                .email("orig@test.com")
+                .build(),
             ClientResponse.class);
     var updateRequest =
-        ClientRequest.builder()
-            .lastName("Updated")
-            .firstName("New")
-            .email("new@test.com")
-            .build();
+        ClientRequest.builder().lastName("Updated").firstName("New").email("new@test.com").build();
 
     rest.put("/clients/" + created.getBody().id(), updateRequest);
     var updated = rest.getForEntity("/clients/" + created.getBody().id(), ClientResponse.class);
@@ -94,8 +97,13 @@ class ClientControllerTest extends FacadeIT {
   @Test
   void delete_client() {
     var created =
-        rest.postForEntity("/clients",
-            ClientRequest.builder().lastName("To Delete").firstName("User").email("delete@test.com").build(),
+        rest.postForEntity(
+            "/clients",
+            ClientRequest.builder()
+                .lastName("To Delete")
+                .firstName("User")
+                .email("delete@test.com")
+                .build(),
             ClientResponse.class);
     var id = created.getBody().id();
 
