@@ -164,8 +164,16 @@ class ControllerMockMvcTest {
     var bookId = UUID.randomUUID();
     var response =
         new CopyResponse(
-            UUID.randomUUID(), "ISBN", FormatEnum.PAPERBACK, BigDecimal.TEN, 100, null, null, null,
-            bookId, null);
+            UUID.randomUUID(),
+            "ISBN",
+            FormatEnum.PAPERBACK,
+            BigDecimal.TEN,
+            100,
+            null,
+            null,
+            null,
+            bookId,
+            null);
     when(copyService.findByBookId(bookId)).thenReturn(List.of(response));
 
     mockMvc
@@ -584,7 +592,8 @@ class ControllerMockMvcTest {
   @Test
   void author_getBooks() throws Exception {
     var authorId = UUID.randomUUID();
-    var response = new BookResponse(UUID.randomUUID(), "Book Title", null, "English", Instant.now());
+    var response =
+        new BookResponse(UUID.randomUUID(), "Book Title", null, "English", Instant.now());
     when(bookService.findByAuthorId(authorId)).thenReturn(List.of(response));
 
     mockMvc
@@ -741,7 +750,8 @@ class ControllerMockMvcTest {
   @Test
   void client_getOrders() throws Exception {
     var clientId = UUID.randomUUID();
-    var response = OrderResponse.builder().id(UUID.randomUUID()).status(OrderStatusEnum.PENDING).build();
+    var response =
+        OrderResponse.builder().id(UUID.randomUUID()).status(OrderStatusEnum.PENDING).build();
     when(orderService.findByClientId(clientId)).thenReturn(List.of(response));
 
     mockMvc
