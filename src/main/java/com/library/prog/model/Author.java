@@ -21,8 +21,8 @@ public class Author {
   @Column(name = "id", updatable = false, nullable = false)
   private UUID id;
 
-  @Column(name = "last_name", nullable = false, length = 100)
-  private String lastName;
+  @Column(name = "name", nullable = false, length = 100)
+  private String name;
 
   @Column(name = "first_name", length = 100)
   private String firstName;

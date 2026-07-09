@@ -2,7 +2,11 @@ package com.library.prog.endpoint.rest.controller;
 
 import com.library.prog.dto.request.CopyRequest;
 import com.library.prog.dto.response.CopyResponse;
+import com.library.prog.dto.response.StockMovementResponse;
+import com.library.prog.dto.response.StockResponse;
 import com.library.prog.service.CopyService;
+import com.library.prog.service.StockMovementService;
+import com.library.prog.service.StockService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -26,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class CopyController {
 
   private final CopyService copyService;
+  private final StockService stockService;
+  private final StockMovementService stockMovementService;
 
   @GetMapping
   public List<CopyResponse> findAll() {
@@ -46,6 +52,16 @@ public class CopyController {
   @PutMapping("/{id}")
   public CopyResponse update(@PathVariable UUID id, @Valid @RequestBody CopyRequest request) {
     return copyService.update(id, request);
+  }
+
+  @GetMapping("/{id}/stock")
+  public StockResponse getStock(@PathVariable UUID id) {
+    return stockService.findByCopyId(id);
+  }
+
+  @GetMapping("/{id}/movements")
+  public List<StockMovementResponse> getMovements(@PathVariable UUID id) {
+    return stockMovementService.findByCopyId(id);
   }
 
   @DeleteMapping("/{id}")
