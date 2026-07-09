@@ -2,6 +2,7 @@ package com.library.prog.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 import com.library.prog.dto.request.StockAdjustRequest;
@@ -84,6 +85,54 @@ class StockServiceTest {
     when(stockRepository.findByCopyId(copyId)).thenReturn(Optional.empty());
 
     assertThrows(EntityNotFoundException.class, () -> stockService.findByCopyId(copyId));
+  }
+
+  @Test
+  void getLowStock_uses_default_threshold_when_none_provided() {
+    var copy = buildCopy();
+    var stock = buildStock(copy, 2, 0);
+    when(stockRepository.findLowStock(StockService.DEFAULT_LOW_STOCK_THRESHOLD))
+        .thenReturn(List.of(stock));
+
+    var result = stockService.getLowStock(null);
+
+    assertEquals(1, result.size());
+    assertEquals(2, result.getFirst().availableStock());
+    verify(stockRepository).findLowStock(3);
+  }
+
+  @Test
+  void getLowStock_uses_provided_threshold() {
+    var copy = buildCopy();
+    var stock = buildStock(copy, 5, 0);
+    when(stockRepository.findLowStock(10)).thenReturn(List.of(stock));
+
+    var result = stockService.getLowStock(10);
+
+    assertEquals(1, result.size());
+    verify(stockRepository).findLowStock(10);
+  }
+
+  @Test
+  void getLowStock_returns_empty_list_when_nothing_below_threshold() {
+    when(stockRepository.findLowStock(anyInt())).thenReturn(List.of());
+
+    var result = stockService.getLowStock(3);
+
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void getLowStock_marks_lowStock_flag_consistently_with_alertThreshold() {
+    var copy = buildCopy();
+    var lowStock = buildStock(copy, 1, 0);
+    lowStock.setAlertThreshold(5);
+    when(stockRepository.findLowStock(3)).thenReturn(List.of(lowStock));
+
+    var result = stockService.getLowStock(3);
+
+    assertTrue(result.getFirst().lowStock());
+    assertEquals(1, result.getFirst().availableStock());
   }
 
   @Test

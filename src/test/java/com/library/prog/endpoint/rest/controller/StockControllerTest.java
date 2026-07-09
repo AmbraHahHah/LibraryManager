@@ -8,6 +8,7 @@ import com.library.prog.dto.response.*;
 import com.library.prog.model.FormatEnum;
 import com.library.prog.model.MovementTypeEnum;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -23,22 +24,50 @@ class StockControllerTest extends FacadeIT {
 
   @Autowired private TestRestTemplate rest;
 
+  private UUID bookId;
   private UUID copyId;
 
   @BeforeEach
   void setUp() {
     var bookReq = BookRequest.builder().title("Test Book").build();
     var bookRes = rest.postForEntity("/books", bookReq, BookResponse.class).getBody();
+    bookId = bookRes.id();
 
     var copyReq =
         CopyRequest.builder()
             .isbn("9782070612758")
             .format(FormatEnum.PAPERBACK)
             .price(new BigDecimal("12.99"))
-            .bookId(bookRes.id())
+            .bookId(bookId)
             .build();
     var copyRes = rest.postForEntity("/copies", copyReq, CopyResponse.class).getBody();
     copyId = copyRes.id();
+  }
+
+  private UUID createCopy(String isbn) {
+    var copyReq =
+        CopyRequest.builder()
+            .isbn(isbn)
+            .format(FormatEnum.PAPERBACK)
+            .price(BigDecimal.TEN)
+            .bookId(bookId)
+            .build();
+    return rest.postForEntity("/copies", copyReq, CopyResponse.class).getBody().id();
+  }
+
+  private StockResponse createStock(String isbn) {
+    var newCopyId = createCopy(isbn);
+    var stockReq = StockRequest.builder().copyId(newCopyId).build();
+    return rest.postForEntity("/stocks", stockReq, StockResponse.class).getBody();
+  }
+
+  private void restock(UUID stockId, int quantity) {
+    var adjustReq =
+        StockAdjustRequest.builder()
+            .quantity(quantity)
+            .movementType(MovementTypeEnum.RESTOCK)
+            .build();
+    rest.patchForObject("/stocks/" + stockId + "/adjust", adjustReq, StockResponse.class);
   }
 
   @Test
@@ -243,5 +272,46 @@ class StockControllerTest extends FacadeIT {
 
     var found = rest.getForEntity("/stocks/" + created.id(), StockResponse.class);
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, found.getStatusCode());
+  }
+
+  @Test
+  void low_stock_uses_default_threshold_of_3() {
+    var low = createStock("1111111111");
+    restock(low.id(), 2);
+    var high = createStock("2222222222");
+    restock(high.id(), 20);
+
+    var response = rest.getForEntity("/stocks/low-stock", StockResponse[].class);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    var ids = Arrays.stream(response.getBody()).map(StockResponse::id).toList();
+    assertTrue(ids.contains(low.id()));
+    assertFalse(ids.contains(high.id()));
+  }
+
+  @Test
+  void low_stock_accepts_custom_threshold() {
+    var stock = createStock("3333333333");
+    restock(stock.id(), 8);
+
+    var responseDefault = rest.getForEntity("/stocks/low-stock", StockResponse[].class);
+    var responseCustom = rest.getForEntity("/stocks/low-stock?threshold=10", StockResponse[].class);
+
+    var defaultIds = Arrays.stream(responseDefault.getBody()).map(StockResponse::id).toList();
+    var customIds = Arrays.stream(responseCustom.getBody()).map(StockResponse::id).toList();
+
+    assertFalse(defaultIds.contains(stock.id()));
+    assertTrue(customIds.contains(stock.id()));
+  }
+
+  @Test
+  void low_stock_excludes_stock_above_threshold() {
+    var stock = createStock("4444444444");
+    restock(stock.id(), 100);
+
+    var response = rest.getForEntity("/stocks/low-stock?threshold=3", StockResponse[].class);
+
+    var ids = Arrays.stream(response.getBody()).map(StockResponse::id).toList();
+    assertFalse(ids.contains(stock.id()));
   }
 }
