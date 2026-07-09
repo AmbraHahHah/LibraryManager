@@ -42,9 +42,7 @@ public class StockService {
 
   public List<StockResponse> getLowStock(Integer threshold) {
     int effectiveThreshold = threshold != null ? threshold : DEFAULT_LOW_STOCK_THRESHOLD;
-    return stockRepository.findLowStock(effectiveThreshold).stream()
-        .map(this::toResponse)
-        .toList();
+    return stockRepository.findLowStock(effectiveThreshold).stream().map(this::toResponse).toList();
   }
 
   public StockResponse findByCopyId(UUID copyId) {
