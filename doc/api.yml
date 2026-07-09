@@ -779,6 +779,161 @@ paths:
                 items:
                   $ref: "#/components/schemas/RevenueByGenreResponse"
 
+  ##############################################################################
+  # Orders
+  ##############################################################################
+  /orders:
+    get:
+      summary: Liste toutes les commandes
+      tags:
+        - Orders
+      operationId: listOrders
+      responses:
+        "200":
+          description: Liste des commandes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrderResponse"
+    post:
+      summary: Crée une commande avec validation stock
+      tags:
+        - Orders
+      operationId: createOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderRequest"
+      responses:
+        "201":
+          description: Commande créée (PENDING)
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderResponse"
+        "400":
+          description: Requête invalide ou stock insuffisant
+
+  /orders/{id}:
+    get:
+      summary: Détail d'une commande
+      tags:
+        - Orders
+      operationId: getOrder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderResponse"
+        "404":
+          description: Commande non trouvée
+    delete:
+      summary: Supprime une commande PENDING
+      tags:
+        - Orders
+      operationId: deleteOrder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Supprimée
+        "404":
+          description: Commande non trouvée
+        "409":
+          description: Impossible de supprimer une commande non PENDING
+
+  /orders/{id}/confirm:
+    patch:
+      summary: Confirme une commande PENDING (déduit le stock)
+      tags:
+        - Orders
+      operationId: confirmOrder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderResponse"
+        "404":
+          description: Commande non trouvée
+        "409":
+          description: Seulement les commandes PENDING peuvent être confirmées
+
+  /orders/{id}/cancel:
+    patch:
+      summary: Annule une commande (libère le stock)
+      tags:
+        - Orders
+      operationId: cancelOrder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Annulée
+        "404":
+          description: Commande non trouvée
+        "409":
+          description: Commande déjà annulée ou remboursée
+
+  ##############################################################################
+  # Order Lines
+  ##############################################################################
+  /order-lines/by-order:
+    get:
+      summary: Lignes d'une commande
+      tags:
+        - Order Lines
+      operationId: getOrderLinesByOrder
+      parameters:
+        - name: orderId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrderLineResponse"
+
 components:
   schemas:
     # ────────────────────────────────────────────────────────────────────────────
@@ -798,6 +953,17 @@ components:
         - RESTOCK
         - LOSS
         - CUSTOMER_RETURN
+
+    OrderStatusEnum:
+      type: string
+      enum:
+        - PENDING
+        - CONFIRMED
+        - PREPARING
+        - SHIPPED
+        - DELIVERED
+        - CANCELLED
+        - REFUNDED
 
     # ────────────────────────────────────────────────────────────────────────────
     # Requests
@@ -915,6 +1081,37 @@ components:
         orderId:
           type: string
           format: uuid
+
+    OrderRequest:
+      type: object
+      required:
+        - clientId
+        - lines
+      properties:
+        clientId:
+          type: string
+          format: uuid
+        shippingAddress:
+          type: string
+        paymentMethod:
+          type: string
+        lines:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderLineRequest"
+
+    OrderLineRequest:
+      type: object
+      required:
+        - copyId
+        - quantity
+      properties:
+        copyId:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+          minimum: 1
 
     # ────────────────────────────────────────────────────────────────────────────
     # Responses
@@ -1115,3 +1312,75 @@ components:
         - copyCount
         - availableStock
         - reservedQuantity
+
+    OrderResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        clientId:
+          type: string
+          format: uuid
+        clientName:
+          type: string
+        status:
+          $ref: "#/components/schemas/OrderStatusEnum"
+        totalAmount:
+          type: number
+          format: decimal
+        shippingFee:
+          type: number
+          format: decimal
+        shippingAddress:
+          type: string
+        paymentMethod:
+          type: string
+        paymentReference:
+          type: string
+        orderDate:
+          type: string
+          format: date-time
+        lines:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderLineResponse"
+      required:
+        - id
+        - clientId
+        - clientName
+        - status
+        - totalAmount
+        - shippingFee
+        - orderDate
+        - lines
+
+    OrderLineResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        copyId:
+          type: string
+          format: uuid
+        isbn:
+          type: string
+        format:
+          $ref: "#/components/schemas/FormatEnum"
+        quantity:
+          type: integer
+        unitPrice:
+          type: number
+          format: decimal
+        discount:
+          type: number
+          format: decimal
+      required:
+        - id
+        - copyId
+        - isbn
+        - format
+        - quantity
+        - unitPrice
+        - discount
