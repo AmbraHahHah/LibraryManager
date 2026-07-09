@@ -6,10 +6,15 @@ import com.library.prog.conf.FacadeIT;
 import com.library.prog.dto.request.BookRequest;
 import com.library.prog.dto.request.CopyRequest;
 import com.library.prog.dto.request.EditorRequest;
+import com.library.prog.dto.request.StockAdjustRequest;
+import com.library.prog.dto.request.StockRequest;
 import com.library.prog.dto.response.BookResponse;
 import com.library.prog.dto.response.CopyResponse;
 import com.library.prog.dto.response.EditorResponse;
+import com.library.prog.dto.response.StockMovementResponse;
+import com.library.prog.dto.response.StockResponse;
 import com.library.prog.model.FormatEnum;
+import com.library.prog.model.MovementTypeEnum;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -29,6 +34,7 @@ class CopyControllerTest extends FacadeIT {
 
   private UUID bookId;
   private UUID publisherId;
+  private UUID copyId;
 
   @BeforeEach
   void setUp() {
@@ -44,6 +50,15 @@ class CopyControllerTest extends FacadeIT {
             .build();
     var editorRes = rest.postForEntity("/editors", editorReq, EditorResponse.class).getBody();
     publisherId = editorRes.id();
+
+    var copyReq =
+        CopyRequest.builder()
+            .isbn("9990000000001")
+            .format(FormatEnum.PAPERBACK)
+            .bookId(bookId)
+            .build();
+    var copyRes = rest.postForEntity("/copies", copyReq, CopyResponse.class).getBody();
+    copyId = copyRes.id();
   }
 
   @Test
@@ -174,7 +189,51 @@ class CopyControllerTest extends FacadeIT {
   }
 
   @Test
-  void return_404_when_copy_not_found() {
+  void get_copy_stock() {
+    rest.postForEntity(
+        "/stocks",
+        StockRequest.builder().copyId(copyId).alertThreshold(5).build(),
+        StockResponse.class);
+
+    var response = rest.getForEntity("/copies/" + copyId + "/stock", StockResponse.class);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals(copyId, response.getBody().copyId());
+    assertEquals(5, response.getBody().alertThreshold());
+  }
+
+  @Test
+  void get_copy_movements() {
+    var stock =
+        rest.postForEntity(
+                "/stocks", StockRequest.builder().copyId(copyId).build(), StockResponse.class)
+            .getBody();
+    rest.patchForObject(
+        "/stocks/" + stock.id() + "/adjust",
+        StockAdjustRequest.builder()
+            .quantity(5)
+            .movementType(MovementTypeEnum.RESTOCK)
+            .reason("Initial")
+            .build(),
+        StockResponse.class);
+
+    var response =
+        rest.getForEntity("/copies/" + copyId + "/movements", StockMovementResponse[].class);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertTrue(response.getBody().length >= 1);
+    assertEquals(copyId, response.getBody()[0].copyId());
+  }
+
+  @Test
+  void get_copy_stock_returns_404_when_no_stock() {
+    var response = rest.getForEntity("/copies/" + copyId + "/stock", StockResponse.class);
+
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+  }
+
+  @Test
+  void return_400_when_copy_not_found() {
     var response = rest.getForEntity("/copies/" + UUID.randomUUID(), CopyResponse.class);
 
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());

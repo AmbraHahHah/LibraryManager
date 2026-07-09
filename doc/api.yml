@@ -1,0 +1,1117 @@
+openapi: 3.0.3
+info:
+  title: LibraryManager API
+  version: 1.0.0
+  description: API de gestion de librairie — LibraryManager
+
+paths:
+  ##############################################################################
+  # Health
+  ##############################################################################
+  /ping:
+    get:
+      summary: Health check
+      tags:
+        - Health
+      operationId: ping
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: pong
+
+  /health/db:
+    get:
+      summary: Health check — Database
+      tags:
+        - Health
+      operationId: healthDb
+      responses:
+        "200":
+          description: Base de données accessible
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: OK
+        "500":
+          description: Base de données inaccessible
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: KO
+
+  /health/email:
+    get:
+      summary: Health check — Email
+      tags:
+        - Health
+      operationId: healthEmail
+      parameters:
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        "200":
+          description: Email envoyé
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: OK
+
+  ##############################################################################
+  # Books
+  ##############################################################################
+  /books:
+    get:
+      summary: Liste tous les livres
+      tags:
+        - Books
+      operationId: listBooks
+      responses:
+        "200":
+          description: Liste des livres
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BookResponse"
+    post:
+      summary: Crée un livre
+      tags:
+        - Books
+      operationId: createBook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookRequest"
+      responses:
+        "201":
+          description: Livre créé
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+              description: URI du nouveau livre
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookResponse"
+        "400":
+          description: Requête invalide
+
+  /books/{id}:
+    get:
+      summary: Détail d'un livre
+      tags:
+        - Books
+      operationId: getBook
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookResponse"
+        "404":
+          description: Livre non trouvé
+    put:
+      summary: Met à jour un livre
+      tags:
+        - Books
+      operationId: updateBook
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookResponse"
+        "404":
+          description: Livre non trouvé
+    delete:
+      summary: Supprime un livre
+      tags:
+        - Books
+      operationId: deleteBook
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Supprimé
+        "404":
+          description: Livre non trouvé
+
+  /books/{bookId}/stock:
+    get:
+      summary: Stock agrégé d'un livre
+      tags:
+        - Books
+      operationId: getBookStock
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookStockResponse"
+
+  /books/{bookId}/stock-by-edition:
+    get:
+      summary: Stock groupé par format d'édition
+      tags:
+        - Books
+      operationId: getStockByEdition
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockByEditionResponse"
+
+  ##############################################################################
+  # Copies
+  ##############################################################################
+  /copies:
+    get:
+      summary: Liste tous les exemplaires
+      tags:
+        - Copies
+      operationId: listCopies
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CopyResponse"
+    post:
+      summary: Crée un exemplaire
+      tags:
+        - Copies
+      operationId: createCopy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CopyRequest"
+      responses:
+        "201":
+          description: Exemplaire créé
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CopyResponse"
+
+  /copies/{id}:
+    get:
+      summary: Détail d'un exemplaire
+      tags:
+        - Copies
+      operationId: getCopy
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CopyResponse"
+        "404":
+          description: Exemplaire non trouvé
+    put:
+      summary: Met à jour un exemplaire
+      tags:
+        - Copies
+      operationId: updateCopy
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CopyRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CopyResponse"
+        "404":
+          description: Exemplaire non trouvé
+    delete:
+      summary: Supprime un exemplaire
+      tags:
+        - Copies
+      operationId: deleteCopy
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Supprimé
+        "404":
+          description: Exemplaire non trouvé
+
+  /copies/{id}/stock:
+    get:
+      summary: Stock d'un exemplaire
+      tags:
+        - Copies
+      operationId: getCopyStock
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Stock de l'exemplaire
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockResponse"
+        "404":
+          description: Exemplaire ou stock non trouvé
+
+  /copies/{id}/movements:
+    get:
+      summary: Mouvements de stock d'un exemplaire
+      tags:
+        - Copies
+      operationId: getCopyMovements
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Liste des mouvements de l'exemplaire
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StockMovementResponse"
+        "404":
+          description: Exemplaire non trouvé
+
+  ##############################################################################
+  # Editors
+  ##############################################################################
+  /editors:
+    get:
+      summary: Liste tous les éditeurs
+      tags:
+        - Editors
+      operationId: listEditors
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EditorResponse"
+    post:
+      summary: Crée un éditeur
+      tags:
+        - Editors
+      operationId: createEditor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditorRequest"
+      responses:
+        "201":
+          description: Éditeur créé
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditorResponse"
+
+  /editors/{id}:
+    get:
+      summary: Détail d'un éditeur
+      tags:
+        - Editors
+      operationId: getEditor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditorResponse"
+        "404":
+          description: Éditeur non trouvé
+    put:
+      summary: Met à jour un éditeur
+      tags:
+        - Editors
+      operationId: updateEditor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditorRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditorResponse"
+        "404":
+          description: Éditeur non trouvé
+    delete:
+      summary: Supprime un éditeur
+      tags:
+        - Editors
+      operationId: deleteEditor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Supprimé
+        "404":
+          description: Éditeur non trouvé
+
+  ##############################################################################
+  # Stock
+  ##############################################################################
+  /stocks:
+    get:
+      summary: Liste tous les stocks
+      tags:
+        - Stock
+      operationId: listStocks
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StockResponse"
+    post:
+      summary: Crée un stock pour un exemplaire
+      tags:
+        - Stock
+      operationId: createStock
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockRequest"
+      responses:
+        "201":
+          description: Stock créé
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockResponse"
+
+  /stocks/{id}:
+    get:
+      summary: Détail d'un stock
+      tags:
+        - Stock
+      operationId: getStock
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockResponse"
+        "404":
+          description: Stock non trouvé
+    put:
+      summary: Met à jour un stock (seuil d'alerte)
+      tags:
+        - Stock
+      operationId: updateStock
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockResponse"
+        "404":
+          description: Stock non trouvé
+    delete:
+      summary: Supprime un stock
+      tags:
+        - Stock
+      operationId: deleteStock
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Supprimé
+        "404":
+          description: Stock non trouvé
+
+  /stocks/{id}/adjust:
+    patch:
+      summary: Ajuste le stock (RESTOCK/SALE/LOSS/CUSTOMER_RETURN)
+      tags:
+        - Stock
+      operationId: adjustStock
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockAdjustRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockResponse"
+        "400":
+          description: Stock insuffisant
+        "404":
+          description: Stock non trouvé
+
+  /stocks/by-copy:
+    get:
+      summary: Stock par exemplaire
+      tags:
+        - Stock
+      operationId: getStockByCopy
+      parameters:
+        - name: copyId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockResponse"
+        "404":
+          description: Stock non trouvé pour cet exemplaire
+
+  ##############################################################################
+  # Stock Movements
+  ##############################################################################
+  /stock-movements:
+    get:
+      summary: Liste tous les mouvements de stock
+      tags:
+        - Stock Movements
+      operationId: listStockMovements
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StockMovementResponse"
+    post:
+      summary: Crée un mouvement de stock
+      tags:
+        - Stock Movements
+      operationId: createStockMovement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockMovementRequest"
+      responses:
+        "201":
+          description: Mouvement créé
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockMovementResponse"
+
+  /stock-movements/{id}:
+    get:
+      summary: Détail d'un mouvement
+      tags:
+        - Stock Movements
+      operationId: getStockMovement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockMovementResponse"
+        "404":
+          description: Mouvement non trouvé
+    delete:
+      summary: Supprime un mouvement
+      tags:
+        - Stock Movements
+      operationId: deleteStockMovement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Supprimé
+        "404":
+          description: Mouvement non trouvé
+
+  /stock-movements/by-copy:
+    get:
+      summary: Mouvements d'un exemplaire
+      tags:
+        - Stock Movements
+      operationId: getStockMovementsByCopy
+      parameters:
+        - name: copyId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StockMovementResponse"
+
+  /stock-movements/by-order:
+    get:
+      summary: Mouvements liés à une commande
+      tags:
+        - Stock Movements
+      operationId: getStockMovementsByOrder
+      parameters:
+        - name: orderId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StockMovementResponse"
+
+  ##############################################################################
+  # Revenue
+  ##############################################################################
+  /revenue/by-genre:
+    get:
+      summary: Revenu total par genre
+      description: Agrège le CA par catégorie (commandes CONFIRMED/PREPARING/SHIPPED/DELIVERED uniquement)
+      tags:
+        - Revenue
+      operationId: getRevenueByGenre
+      responses:
+        "200":
+          description: Liste triée par revenu décroissant
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RevenueByGenreResponse"
+
+components:
+  schemas:
+    # ────────────────────────────────────────────────────────────────────────────
+    # Enum
+    # ────────────────────────────────────────────────────────────────────────────
+    FormatEnum:
+      type: string
+      enum:
+        - PAPERBACK
+        - HARDCOVER
+        - EBOOK
+
+    MovementTypeEnum:
+      type: string
+      enum:
+        - SALE
+        - RESTOCK
+        - LOSS
+        - CUSTOMER_RETURN
+
+    # ────────────────────────────────────────────────────────────────────────────
+    # Requests
+    # ────────────────────────────────────────────────────────────────────────────
+    BookRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          maxLength: 500
+        summary:
+          type: string
+        language:
+          type: string
+          maxLength: 50
+          default: English
+
+    CopyRequest:
+      type: object
+      required:
+        - isbn
+        - format
+        - price
+        - bookId
+      properties:
+        isbn:
+          type: string
+          maxLength: 20
+        format:
+          $ref: "#/components/schemas/FormatEnum"
+        price:
+          type: number
+          format: decimal
+          minimum: 0
+        pageCount:
+          type: integer
+        publicationDate:
+          type: string
+          format: date
+        imageUrl:
+          type: string
+        bookId:
+          type: string
+          format: uuid
+        publisherId:
+          type: string
+          format: uuid
+
+    EditorRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          maxLength: 150
+        address:
+          type: string
+        email:
+          type: string
+          maxLength: 255
+        country:
+          type: string
+          maxLength: 100
+
+    StockRequest:
+      type: object
+      required:
+        - copyId
+        - alertThreshold
+      properties:
+        copyId:
+          type: string
+          format: uuid
+        alertThreshold:
+          type: integer
+          minimum: 0
+          default: 5
+
+    StockAdjustRequest:
+      type: object
+      required:
+        - quantity
+        - movementType
+      properties:
+        quantity:
+          type: integer
+          minimum: 1
+        movementType:
+          $ref: "#/components/schemas/MovementTypeEnum"
+        reason:
+          type: string
+          maxLength: 500
+
+    StockMovementRequest:
+      type: object
+      required:
+        - quantity
+        - movementType
+        - copyId
+      properties:
+        quantity:
+          type: integer
+          minimum: 1
+        movementType:
+          $ref: "#/components/schemas/MovementTypeEnum"
+        reason:
+          type: string
+          maxLength: 500
+        copyId:
+          type: string
+          format: uuid
+        orderId:
+          type: string
+          format: uuid
+
+    # ────────────────────────────────────────────────────────────────────────────
+    # Responses
+    # ────────────────────────────────────────────────────────────────────────────
+    BookResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        summary:
+          type: string
+        language:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - language
+        - createdAt
+
+    CopyResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        isbn:
+          type: string
+        format:
+          $ref: "#/components/schemas/FormatEnum"
+        price:
+          type: number
+          format: decimal
+        pageCount:
+          type: integer
+        publicationDate:
+          type: string
+          format: date
+        imageUrl:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        bookId:
+          type: string
+          format: uuid
+        publisherId:
+          type: string
+          format: uuid
+      required:
+        - id
+        - isbn
+        - format
+        - price
+        - bookId
+
+    EditorResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        address:
+          type: string
+        email:
+          type: string
+        country:
+          type: string
+      required:
+        - id
+        - name
+
+    StockResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        availableQuantity:
+          type: integer
+        reservedQuantity:
+          type: integer
+        alertThreshold:
+          type: integer
+        availableStock:
+          type: integer
+          description: availableQuantity - reservedQuantity
+        outOfStock:
+          type: boolean
+        lowStock:
+          type: boolean
+        lastUpdated:
+          type: string
+          format: date-time
+        copyId:
+          type: string
+          format: uuid
+      required:
+        - id
+        - availableQuantity
+        - reservedQuantity
+        - alertThreshold
+        - availableStock
+        - outOfStock
+        - lowStock
+        - lastUpdated
+        - copyId
+
+    StockMovementResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+        movementType:
+          $ref: "#/components/schemas/MovementTypeEnum"
+        reason:
+          type: string
+        movementDate:
+          type: string
+          format: date-time
+        copyId:
+          type: string
+          format: uuid
+        orderId:
+          type: string
+          format: uuid
+      required:
+        - id
+        - quantity
+        - movementType
+        - movementDate
+        - copyId
+
+    RevenueByGenreResponse:
+      type: object
+      properties:
+        genre:
+          type: string
+        revenue:
+          type: number
+          format: decimal
+      required:
+        - genre
+        - revenue
+
+    BookStockResponse:
+      type: object
+      properties:
+        totalCopies:
+          type: integer
+          format: int64
+        totalAvailableStock:
+          type: integer
+        totalReservedQuantity:
+          type: integer
+        outOfStock:
+          type: boolean
+      required:
+        - totalCopies
+        - totalAvailableStock
+        - totalReservedQuantity
+        - outOfStock
+
+    StockByEditionResponse:
+      type: object
+      properties:
+        editions:
+          type: array
+          items:
+            $ref: "#/components/schemas/EditionStock"
+      required:
+        - editions
+
+    EditionStock:
+      type: object
+      properties:
+        format:
+          type: string
+        copyCount:
+          type: integer
+          format: int64
+        availableStock:
+          type: integer
+        reservedQuantity:
+          type: integer
+      required:
+        - format
+        - copyCount
+        - availableStock
+        - reservedQuantity
