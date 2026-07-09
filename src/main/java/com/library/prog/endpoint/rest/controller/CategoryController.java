@@ -1,7 +1,9 @@
 package com.library.prog.endpoint.rest.controller;
 
 import com.library.prog.dto.request.CategoryRequest;
+import com.library.prog.dto.response.BookResponse;
 import com.library.prog.dto.response.CategoryResponse;
+import com.library.prog.service.BookService;
 import com.library.prog.service.CategoryService;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController {
 
   private final CategoryService categoryService;
+  private final BookService bookService;
 
   @GetMapping
   public List<CategoryResponse> findAll() {
@@ -40,6 +43,11 @@ public class CategoryController {
   @GetMapping("/{id}")
   public CategoryResponse findById(@PathVariable UUID id) {
     return categoryService.findById(id);
+  }
+
+  @GetMapping("/{id}/books")
+  public List<BookResponse> getBooks(@PathVariable UUID id) {
+    return bookService.findByCategoryId(id);
   }
 
   @PostMapping

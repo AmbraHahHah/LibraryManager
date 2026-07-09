@@ -25,6 +25,10 @@ public class CopyService {
     return copyRepository.findAll().stream().map(this::toResponse).toList();
   }
 
+  public List<CopyResponse> findByBookId(UUID bookId) {
+    return copyRepository.findByBookId(bookId).stream().map(this::toResponse).toList();
+  }
+
   public CopyResponse findById(UUID id) {
     return copyRepository
         .findById(id)

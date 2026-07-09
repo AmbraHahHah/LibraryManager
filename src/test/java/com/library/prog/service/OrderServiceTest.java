@@ -47,6 +47,18 @@ class OrderServiceTest {
   }
 
   @Test
+  void findByClientId_returns_orders() {
+    var client = buildClient();
+    var order = buildOrder(client, OrderStatusEnum.PENDING);
+    when(orderRepository.findByCustomerId(client.getId())).thenReturn(List.of(order));
+
+    var result = orderService.findByClientId(client.getId());
+
+    assertEquals(1, result.size());
+    assertEquals(client.getId(), result.getFirst().clientId());
+  }
+
+  @Test
   void findById_returns_order_when_found() {
     var client = buildClient();
     var order = buildOrder(client, OrderStatusEnum.PENDING);

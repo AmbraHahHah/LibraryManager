@@ -55,6 +55,18 @@ public class BookService {
     bookRepository.deleteById(id);
   }
 
+  public List<BookResponse> search(String title, String author, String category) {
+    return bookRepository.search(title, author, category).stream().map(this::toResponse).toList();
+  }
+
+  public List<BookResponse> findByAuthorId(UUID authorId) {
+    return bookRepository.findByAuthorId(authorId).stream().map(this::toResponse).toList();
+  }
+
+  public List<BookResponse> findByCategoryId(UUID categoryId) {
+    return bookRepository.findByCategoryId(categoryId).stream().map(this::toResponse).toList();
+  }
+
   private BookResponse toResponse(Book book) {
     return BookResponse.builder()
         .id(book.getId())

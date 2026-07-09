@@ -25,21 +25,21 @@
 ## 4. Endpoints requis + doc API
 
 ### CRUD manquants
-- [ ] Author — Repository → Service → Controller → DTOs
-- [ ] Category — Repository → Service → Controller → DTOs (hiérarchie parent/enfants)
-- [ ] Client — Repository → Service → Controller → DTOs
-- [ ] Review — Repository → Service → Controller → DTOs
-- [ ] Order — Service + Controller (Repository existe)
-- [ ] OrderLine — Repository → Service → Controller → DTOs
+- [X] Author — Repository → Service → Controller → DTOs
+- [X] Category — Repository → Service → Controller → DTOs (hiérarchie parent/enfants)
+- [X] Client — Repository → Service → Controller → DTOs
+- [X] Review — Repository → Service → Controller → DTOs
+- [X] Order — Service + Controller (Repository existe)
+- [X] OrderLine — Repository → Service → Controller → DTOs
 
 ### Endpoints de recherche / filtres
-- [ ] `GET /books/search?title=&author=&category=`
-- [ ] `GET /books/{id}/copies`
-- [ ] `GET /books/{id}/reviews`
-- [ ] `GET /authors/{id}/books`
-- [ ] `GET /categories/{id}/books`
-- [ ] `GET /clients/{id}/orders`
-- [ ] `GET /clients/{id}/reviews`
+- [X] `GET /books/search?title=&author=&category=`
+- [X] `GET /books/{id}/copies`
+- [X] `GET /books/{id}/reviews`
+- [X] `GET /authors/{id}/books`
+- [X] `GET /categories/{id}/books`
+- [X] `GET /clients/{id}/orders`
+- [X] `GET /clients/{id}/reviews`
 - [X] `GET /copies/{id}/stock`
 - [X] `GET /copies/{id}/movements`
 
@@ -58,21 +58,26 @@
 ## 5. JaCoCo 80% + Tests
 
 ### Configuration
-- [ ] Passer `minimum = 0` → `minimum = 0.8` dans `jacocoTestCoverageVerification`
+- [X] Passer `minimum = 0` → `minimum = 0.8` dans `jacocoTestCoverageVerification`
 
 ### Tests unitaires (Mockito)
 - [X] `StockServiceTest`
 - [X] `StockMovementServiceTest`
-- [ ] `OrderServiceTest`
+- [X] `OrderServiceTest`
 - [X] `RevenueServiceTest`
-- [ ] `AuthorServiceTest`
-- [ ] `CategoryServiceTest`
-- [ ] `ClientServiceTest`
-- [ ] `ReviewServiceTest`
+- [X] `AuthorServiceTest`
+- [X] `CategoryServiceTest`
+- [X] `ClientServiceTest`
+- [X] `ReviewServiceTest`
+- [X] `OrderLineServiceTest`
+- [X] `BookServiceTest`
+- [X] `CopyServiceTest`
 
 ### Tests d'intégration (Testcontainers)
-- [ ] Contrôleurs existants (Book, Copy, Editor — déjà existants)
-- [X] Nouveaux contrôleurs (Stock, StockMovement, Revenue — reste Order, etc.)
+- [X] BookControllerTest, CopyControllerTest, EditorControllerTest
+- [X] AuthorControllerTest, CategoryControllerTest, ClientControllerTest, ReviewControllerTest, OrderLineControllerTest, OrderControllerTest
+- [X] StockControllerTest, StockMovementControllerTest
+- [X] ControllerMockMvcTest (tous les contrôleurs en WebMvcTest)
 
 ## Déjà fait
 - [X] StockRepository + StockMovementRepository + OrderRepository

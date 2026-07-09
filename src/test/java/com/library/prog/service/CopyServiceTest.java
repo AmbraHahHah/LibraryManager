@@ -48,6 +48,19 @@ class CopyServiceTest {
   }
 
   @Test
+  void findByBookId_returns_copies() {
+    var book = buildBook();
+    var copy = buildCopy("1234567890", book, null);
+    var bookId = book.getId();
+    when(copyRepository.findByBookId(bookId)).thenReturn(List.of(copy));
+
+    var result = copyService.findByBookId(bookId);
+
+    assertEquals(1, result.size());
+    assertEquals("1234567890", result.getFirst().isbn());
+  }
+
+  @Test
   void findById_returns_copy_when_found() {
     var book = buildBook();
     var copy = buildCopy("1234567890", book, null);

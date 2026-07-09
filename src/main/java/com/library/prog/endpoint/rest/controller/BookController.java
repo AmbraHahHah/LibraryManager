@@ -3,8 +3,12 @@ package com.library.prog.endpoint.rest.controller;
 import com.library.prog.dto.request.BookRequest;
 import com.library.prog.dto.response.BookResponse;
 import com.library.prog.dto.response.BookStockResponse;
+import com.library.prog.dto.response.CopyResponse;
+import com.library.prog.dto.response.ReviewResponse;
 import com.library.prog.dto.response.StockByEditionResponse;
 import com.library.prog.service.BookService;
+import com.library.prog.service.CopyService;
+import com.library.prog.service.ReviewService;
 import com.library.prog.service.StockService;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,15 +35,35 @@ public class BookController {
 
   private final BookService bookService;
   private final StockService stockService;
+  private final CopyService copyService;
+  private final ReviewService reviewService;
 
   @GetMapping
   public List<BookResponse> findAll() {
     return bookService.findAll();
   }
 
+  @GetMapping("/search")
+  public List<BookResponse> search(
+      @RequestParam(required = false) String title,
+      @RequestParam(required = false) String author,
+      @RequestParam(required = false) String category) {
+    return bookService.search(title, author, category);
+  }
+
   @GetMapping("/{id}")
   public BookResponse findById(@PathVariable UUID id) {
     return bookService.findById(id);
+  }
+
+  @GetMapping("/{bookId}/copies")
+  public List<CopyResponse> getCopies(@PathVariable UUID bookId) {
+    return copyService.findByBookId(bookId);
+  }
+
+  @GetMapping("/{bookId}/reviews")
+  public List<ReviewResponse> getReviews(@PathVariable UUID bookId) {
+    return reviewService.findByBookId(bookId);
   }
 
   @GetMapping("/{bookId}/stock")

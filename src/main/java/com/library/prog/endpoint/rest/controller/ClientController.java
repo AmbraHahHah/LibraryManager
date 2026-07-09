@@ -2,7 +2,11 @@ package com.library.prog.endpoint.rest.controller;
 
 import com.library.prog.dto.request.ClientRequest;
 import com.library.prog.dto.response.ClientResponse;
+import com.library.prog.dto.response.OrderResponse;
+import com.library.prog.dto.response.ReviewResponse;
 import com.library.prog.service.ClientService;
+import com.library.prog.service.OrderService;
+import com.library.prog.service.ReviewService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -26,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClientController {
 
   private final ClientService clientService;
+  private final OrderService orderService;
+  private final ReviewService reviewService;
 
   @GetMapping
   public List<ClientResponse> findAll() {
@@ -35,6 +41,16 @@ public class ClientController {
   @GetMapping("/{id}")
   public ClientResponse findById(@PathVariable UUID id) {
     return clientService.findById(id);
+  }
+
+  @GetMapping("/{id}/orders")
+  public List<OrderResponse> getOrders(@PathVariable UUID id) {
+    return orderService.findByClientId(id);
+  }
+
+  @GetMapping("/{id}/reviews")
+  public List<ReviewResponse> getReviews(@PathVariable UUID id) {
+    return reviewService.findByClientId(id);
   }
 
   @PostMapping

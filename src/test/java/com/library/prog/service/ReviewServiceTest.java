@@ -41,6 +41,30 @@ class ReviewServiceTest {
   }
 
   @Test
+  void findByBookId_returns_reviews() {
+    var review = buildReview();
+    var bookId = review.getBook().getId();
+    when(reviewRepository.findByBookId(bookId)).thenReturn(List.of(review));
+
+    var result = reviewService.findByBookId(bookId);
+
+    assertEquals(1, result.size());
+    assertEquals(4, result.getFirst().rating());
+  }
+
+  @Test
+  void findByClientId_returns_reviews() {
+    var review = buildReview();
+    var clientId = review.getClient().getId();
+    when(reviewRepository.findByClientId(clientId)).thenReturn(List.of(review));
+
+    var result = reviewService.findByClientId(clientId);
+
+    assertEquals(1, result.size());
+    assertEquals(4, result.getFirst().rating());
+  }
+
+  @Test
   void findById_returns_review_when_found() {
     var review = buildReview();
     when(reviewRepository.findById(review.getId())).thenReturn(Optional.of(review));
