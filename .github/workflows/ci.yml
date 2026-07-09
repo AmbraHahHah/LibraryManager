@@ -31,6 +31,7 @@ jobs:
           distribution: 'corretto'
       - run: chmod +x gradlew
       - run: chmod +x .shell/publish_gen_to_maven_local.sh
+      - run: bash .shell/restore-poja-deps.sh
       - run: |
           ./gradlew test
 
