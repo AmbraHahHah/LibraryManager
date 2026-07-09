@@ -39,11 +39,5 @@ out/
 .aws-sam
 **.toml
 
-### Environment ###
-.env
-
 ### Mac OS ###
 .DS_Store
-
-### Environment ###
-.env

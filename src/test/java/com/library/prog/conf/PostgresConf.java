@@ -18,8 +18,8 @@ public class PostgresConf {
   }
 
   void configureProperties(DynamicPropertyRegistry registry) {
-    registry.add("SPRING_DATASOURCE_URL", postgres::getJdbcUrl);
-    registry.add("SPRING_DATASOURCE_USERNAME", postgres::getUsername);
-    registry.add("SPRING_DATASOURCE_PASSWORD", postgres::getPassword);
+    registry.add("spring.datasource.url", postgres::getJdbcUrl);
+    registry.add("spring.datasource.username", postgres::getUsername);
+    registry.add("spring.datasource.password", postgres::getPassword);
   }
 }
